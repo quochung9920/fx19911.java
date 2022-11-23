@@ -33,7 +33,7 @@ public class asm01 {
             this.code = code;
         }
 
-        // Phương thức thêm tỉnh
+        /* Phương thức thêm tỉnh */
         public Province(int id, String name, String code) {
             super();
             this.id = id;
@@ -41,7 +41,7 @@ public class asm01 {
             this.code = code;
         }
 
-        // Khởi tạo mảng tỉnh thành phố và thêm vào dữ liệu
+        /* Khởi tạo mảng tỉnh thành phố và thêm vào dữ liệu */
         public static ArrayList<Province> initProvince() {
             ArrayList<Province> listProvince = new ArrayList<Province>();
             listProvince.add(new Province(1, "Ha Noi", "001"));
@@ -111,9 +111,9 @@ public class asm01 {
         }
     }
 
-    // Kiểm tra định dạng của CCCD
+    /* Kiểm tra định dạng của CCCD */
     public static boolean checkCCCD(String cccd) {
-        // Độ dài chuỗi phải là 12 kí tự và là số từ 0-9
+        // Độ dài chuỗi phải là 12 kí tự và là số từ 0-9 và mã tỉnh phải tồn tại    
         if (cccd.length() != 12) {
             return false;
         } else {
@@ -122,11 +122,22 @@ public class asm01 {
                     return false;
                 }
             }
+
+            boolean isExist = false;
+            for (Province province : Province.initProvince()) {
+                if (cccd.substring(0, 3).equals(province.getCode())) {
+                    isExist = true;
+                } 
+            }
+
+            if (!isExist) {
+                return false;
+            }
         }
         return true;
     }
 
-    // Kiểm tra mã tỉnh
+    /* Kiểm tra mã tỉnh */
     public static String getProvince(String cccd) {
         // Lấy 3 kí tự đầu tiên của chuỗi cccd
         String provinceCode = cccd.substring(0, 3);
@@ -141,7 +152,7 @@ public class asm01 {
         return null;
     }
 
-    // Kiểm tra giới tính
+    /* Kiểm tra giới tính */
     public static String getSex(String cccd) {
         // Lấy 1 kí tự thứ 4 trong chuỗi cccd
         String sexCode = cccd.substring(3, 4);
@@ -149,11 +160,11 @@ public class asm01 {
         if (Integer.parseInt(sexCode) % 2 == 0) {
             return "Nam";
         } else {
-            return "Nữ";
+            return "Nu";
         }
     }
 
-    // Kiểm tra năm sinh
+    /* Kiểm tra năm sinh */
     public static String getYear(String cccd) {
         // Lấy 2 kí tự thứ 5 và 6 trong chuỗi cccd
         String yearCode = cccd.substring(4, 6);
@@ -173,13 +184,13 @@ public class asm01 {
         return null;
     }
 
-    // Kiểm tra số ngẫu nhiên
+    /* Kiểm tra số ngẫu nhiên */
     public static String getNumber(String cccd) {
         // Lấy 6 kí tự thứ 7 đến 12 trong chuỗi cccd
         return cccd.substring(6, 12);
     }
 
-    // Random chuỗi số và chữ cái từ a-z và A-Z và 0-9 với độ dài là 6 kí tự
+    /* Random chuỗi số và chữ cái từ a-z và A-Z và 0-9 với độ dài là 6 kí tự */
     public static String randomString() {
         String randomString = "";
         for (int i = 0; i < 6; i++) {
@@ -195,6 +206,11 @@ public class asm01 {
         return randomString;
     }
 
+    /* Random số từ 100 - 999 */
+    public static String randomNumber() {
+        return String.valueOf((int) (Math.random() * 899 + 100));
+    }
+
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
@@ -202,95 +218,99 @@ public class asm01 {
         System.out.println("| NGAN HANG SO | FX19911@v1.0.0            |");
         System.out.println("+----------+--------------------+----------+");
         System.out.println("| 1. Nhap CCCD                             |");
+        System.out.println("| 2. Nhap CCCD Nang Cao                    |");
         System.out.println("| 0. Thoat                                 |");
         System.out.println("+----------+--------------------+----------+");
 
         // Nhâp lựa chọn của người dùng từ bàn phím
-        int choice;
+        String choice;
         do {
             System.out.print("Chuc nang: ");
             System.out.print("\033[32m");
-            choice = sc.nextInt();
+            choice = sc.nextLine();
             System.out.print("\033[0m");
-            // Nếu người dùng chọn 1
-            if (choice == 1) {
-                // Random số ngẫu nhiên từ 100-199
-                String random = randomString();
-                System.out.println("Nhap ma xac thuc: " + random);
-                String code;
-                do {
-                    // Nhập mã xác thực từ bàn phím
-                    System.out.print("\033[32m");
-                    code = sc.next();
-                    System.out.print("\033[0m");
-                    // Nếu mã xác thực không đúng thì yêu cầu nhập lại
-                    if (code.equals(random)) {
-                        String cccd;
-                        System.out.print("Vui long nhap so CCCD: ");
+            if (choice.matches("[0-2]")) {
+                if (Integer.parseInt(choice) == 1 || Integer.parseInt(choice) == 2) {
+                    // Random số ngẫu nhiên từ 100-199
+                    String random = Integer.parseInt(choice) == 1 ? randomNumber() : randomString();
+                    System.out.println("Nhap ma xac thuc: " + random);
+                    String code;
+                    do {
+                        // Nhập mã xác thực từ bàn phím
                         System.out.print("\033[32m");
-                        cccd = sc.next();
+                        code = sc.next();
                         System.out.print("\033[0m");
-                        do {
-                            // Kiểm tra chuỗi cccd có hợp lệ không
-                            if (checkCCCD(cccd)) {
 
-                                int choice2;
-                                do {
-                                    System.out.println("\t| 1. Kiem tra noi sinh");
-                                    System.out.println("\t| 2. Kiem tra tuoi, gioi tinh");
-                                    System.out.println("\t| 3. Kiem tra so ngau nhien");
-                                    System.out.println("\t| 0. Thoat");
-                                    System.out.print("Chuc nang: ");
+                        // Nếu mã xác thực không đúng thì yêu cầu nhập lại
+                        if (code.equals(random)) {
+                            String cccd;
+                            System.out.print("Vui long nhap so CCCD: ");
+                            System.out.print("\033[32m");
+                            cccd = sc.next();
+                            System.out.print("\033[0m");
+
+
+                            do {
+                                // Kiểm tra chuỗi cccd có hợp lệ không
+                                if (checkCCCD(cccd)) {
+
+                                    String choice2 = "";
+                                    do {
+                                        System.out.println("\t| 1. Kiem tra noi sinh");
+                                        System.out.println("\t| 2. Kiem tra tuoi, gioi tinh");
+                                        System.out.println("\t| 3. Kiem tra so ngau nhien");
+                                        System.out.println("\t| 0. Thoat");
+                                        System.out.print("Chuc nang: ");
+                                        System.out.print("\033[32m");
+                                        choice2 = sc.next();
+                                        System.out.print("\033[0m");
+                                        switch (Integer.parseInt(choice2)) {
+                                            case 1:
+                                                System.out.println("Noi sinh: " + getProvince(cccd));
+                                                break;
+                                            case 2:
+                                                System.out
+                                                        .println("Gioi tinh: " + getSex(cccd) + " | " + getYear(cccd));
+                                                break;
+                                            case 3:
+                                                System.out.println("So ngau nhien: " + getNumber(cccd));
+                                                break;
+                                            case 0:
+                                                System.out.flush();
+                                                main(args);
+                                                break;
+                                            default:
+                                                System.out.println("Lua chon khong hop le! Moi nhap lai!");
+                                                break;
+                                        }
+                                    } while (choice2.matches("[0-3]"));
+                                } else {
+                                    System.out.println("So CCCD khong hop le.");
+                                    System.out.println("Vui long nhap lai hoac 'No' de thoat: ");
                                     System.out.print("\033[32m");
-                                    choice2 = sc.nextInt();
+                                    cccd = sc.next();
                                     System.out.print("\033[0m");
-                                    switch (choice2) {
-                                        case 1:
-                                            System.out.println("Noi sinh: " + getProvince(cccd));
-                                            break;
-                                        case 2:
-                                            System.out.println("Gioi tinh: " + getSex(cccd) + " | " + getYear(cccd));
-                                            break;
-                                        case 3:
-                                            System.out.println("So ngau nhien: " + getNumber(cccd));
-                                            break;
-                                        case 0:
-                                            System.out.println("Cam on da su dung dich vu!");
-                                            System.out.println("+----------+--------------------+----------+");
-                                            System.exit(0);
-                                            break;
-                                        default:
-                                            System.out.println("Lua chon khong hop le! Moi nhap lai!");
-                                            break;
+                                    if (cccd.equalsIgnoreCase("No")) {
+                                        System.out.println("Cam on da su dung dich vu!");
+                                        System.out.println("+----------+--------------------+----------+");
+                                        System.exit(0);
                                     }
-                                } while (choice2 != 0);
-
-                            } else {
-                                System.out.println("So CCCD khong hop le.");
-                                System.out.println("Vui long nhap lai hoac 'No' de thoat: ");
-                                System.out.print("\033[32m");
-                                cccd = sc.next();
-                                System.out.print("\033[0m");
-                                if (cccd.equalsIgnoreCase("No")) {
-                                    System.out.println("Cam on da su dung dich vu!");
-                                    System.out.println("+----------+--------------------+----------+");
-                                    System.exit(0);
                                 }
-                            }
-                        } while (checkCCCD(cccd));
+                            } while (checkCCCD(cccd));
 
-                    } else {
-                        System.out.println("Ma xac thuc khong dung. Vui long thu lai.");
-                    }
-                } while (code != random);
-            } else if (choice != 0) {
-                System.out.println("Lua chon khong hop le! Moi nhap lai!");
+                        } else {
+                            System.out.println("Ma xac thuc khong dung. Vui long thu lai.");
+                        }
+                    } while (code != random);
+                } else if (Integer.parseInt(choice) == 0) {
+                    System.out.println("Cam on da su dung dich vu!");
+                    System.out.println("+----------+--------------------+----------+");
+                    System.exit(0);
+                }
             } else {
-                System.out.println("Cam on da su dung dich vu!");
-                System.out.println("+----------+--------------------+----------+");
-                System.exit(0);
+                System.out.println("Chuc nang khong hop le. Vui long nhap lai.");
             }
-        } while (choice != 1 && choice != 0);
+        } while (!choice.matches("[0-2]"));
 
     }
 }
