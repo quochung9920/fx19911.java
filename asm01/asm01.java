@@ -271,18 +271,124 @@ public class asm01 {
         return choice;
     }
 
-    public static void main(String[] args) {
+    /* Hàm nhập chức năng sau khi nhập CCCD hợp lệ */
+    public static void inputFunctionCCCD(Scanner scanner, String cccd) {
+        // Khởi tạo biến nhập chức năng từ bàn phím
+        String choice2 = "";
 
+        // Hiển thị menu chức năng và yêu cầu người dùng chọn chức năng
+        // Không cần sử dụng try catch bởi vì hàm showMenuFunctionCCCD() đã xử lý lỗi
+        do {
+
+            // Hiển thị menu chức năng
+            showMenuFunctionCCCD();
+
+            // Nhập lựa chọn chức năng
+            System.out.print("Chuc nang: ");
+            choice2 = inputFunction(scanner);
+
+            // Kiểm tra lựa chọn chức năng
+            functionCCCD(cccd, choice2);
+        } while (1 > 0);
+    }
+
+    /* Hàm nhập CCCD và kiểm tra hợp lệ */
+    public static void inputCCCD(Scanner scanner) {
         Scanner sc = new Scanner(System.in);
+        String cccd = "";
+        System.out.print("Vui long nhap so CCCD: ");
+        int count = 0;
+        do {
 
-        showMenuCCCD();
+            cccd = inputFunction(scanner);
+            count++;
 
+            // Kiểm tra chuỗi cccd có hợp lệ không, không cần sử dụng try catch bởi vì hàm
+            // checkCCCD() đã xử lý
+            if (checkCCCD(cccd)) {
+                // Nhập chức năng sau khi nhập CCCD hợp lệ và xử lý lỗi
+                inputFunctionCCCD(sc, cccd);
+            } else {
+
+                // Nếu chuỗi cccd không hợp lệ thì yêu cầu nhập lại
+                System.out.println("So CCCD khong hop le.");
+                System.out.println("Vui long nhap lai hoac 'No' de thoat: ");
+
+                if (cccd.equals("No") && count > 1) {
+                    System.out.println("Cam on da su dung dich vu!");
+                    System.out.println(
+                            "+----------+--------------------+----------+");
+                    System.exit(0);
+                }
+            }
+        } while (!checkCCCD(cccd));
+    }
+
+    /* Hàm nhập mã xác thực và kiểm tra đúng hay sai */
+    public static void inputCode(Scanner scanner, int choiceSecurity) {
+        // Random số từ 100 - 999 hoặc chuỗi số và chữ cái từ a-z và A-Z và 0-9 với độ
+        // dài là 6 kí tự
+        String random = choiceSecurity == EASY ? randomNumber() : randomString();
+        System.out.println("Nhap ma xac thuc: " + random);
+        String code;
+
+        do {
+            // Nhập mã xác thực từ bàn phím
+            code = inputFunction(scanner);
+
+            try {
+                // Nếu mã xác thực không đúng thì yêu cầu nhập lại
+                if (code.equals(random)) {
+                    // Nhập CCCD và xử lý lỗi
+                    inputCCCD(scanner);
+                } else {
+                    System.out.println("Ma xac thuc khong dung. Vui long thu lai.");
+                }
+            } catch (Exception e) {
+                System.out.println("Ma xac thuc khong dung. Vui long thu lai.");
+                continue;
+            }
+        } while (!code.equals(random));
+    }
+
+    /* Hàm nhập mức độ bảo mật */
+    public static void inputSecurity(Scanner scanner) {
+        int choiceSecurity = 0;
+
+        // Chọn chế độ bảo mật
+        System.out.println("Chon che do bao mat: ");
+        System.out.println("\t| 1. EASY");
+        System.out.println("\t| 2. HARD");
+
+        do {
+            try {
+                // Nhập lựa chọn chế độ bảo mật từ bàn phím
+                System.out.print("Che do bao mat: ");
+                choiceSecurity = Integer.parseInt(inputFunction(scanner));
+
+                if (choiceSecurity == 1 || choiceSecurity == 2) {
+
+                    // Nhập mã xác thực và kiểm tra đúng hay sai
+                    inputCode(scanner, choiceSecurity);
+                } else {
+                    System.out.println("Lua chon khong hop le! Moi nhap lai!");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Lua chon khong hop le! Moi nhap lai!");
+                continue;
+            }
+        } while (choiceSecurity != 1 && choiceSecurity != 2);
+    }
+
+    /* Hàm chọn chức năng và triển khai chức năng chính */
+    public static void inputFunctionMain(Scanner scanner) {
         String choice;
         do {
 
             // Nhập lựa chọn chức năng từ bàn phím
             System.out.print("Chuc nang: ");
-            choice = inputFunction(sc);
+            choice = inputFunction(scanner);
 
             try {
                 // Kiểm tra lựa chọn chức năng
@@ -290,95 +396,7 @@ public class asm01 {
 
                     // Kiểm tra lựa chọn chức năng là 1 (Nhập CCCD) hay 0 (Thoát)
                     if (Integer.parseInt(choice) == 1) {
-
-                        int choiceSecurity = 0;
-
-                        // Chọn chế độ bảo mật
-                        System.out.println("Chon che do bao mat: ");
-                        System.out.println("\t| 1. 3 ky tu so tu 100 - 999");
-                        System.out.println("\t| 2. 6 chuoi so va chu cai");
-
-                        do {
-                            try {
-                                // Nhập lựa chọn chế độ bảo mật từ bàn phím
-                                System.out.print("Che do bao mat: ");
-                                choiceSecurity = Integer.parseInt(inputFunction(sc));
-
-                                if (choiceSecurity == 1 || choiceSecurity == 2) {
-
-                                    // Random số từ 100 - 999 hoặc chuỗi số và chữ cái từ a-z và A-Z và 0-9 với độ dài là 6 kí tự
-                                    String random = choiceSecurity == EASY ? randomNumber() : randomString();
-                                    System.out.println("Nhap ma xac thuc: " + random);
-                                    String code;
-
-                                    do {
-                                        // Nhập mã xác thực từ bàn phím
-                                        code = inputFunction(sc);
-
-                                        try {
-                                            // Nếu mã xác thực không đúng thì yêu cầu nhập lại
-                                            if (code.equals(random)) {
-                                                String cccd = "";
-                                                System.out.print("Vui long nhap so CCCD: ");
-                                                int count = 0;
-                                                do {
-
-                                                    cccd = inputFunction(sc);
-                                                    count++;
-                                                    // Kiểm tra chuỗi cccd có hợp lệ không, không cần sử dụng try catch
-                                                    // bởi vì hàm
-                                                    // checkCCCD() đã xử lý
-                                                    if (checkCCCD(cccd)) {
-                                                        // Khởi tạo biến nhập chức năng từ bàn phím
-                                                        String choice2 = "";
-
-                                                        // Hiển thị menu chức năng và yêu cầu người dùng chọn chức năng
-                                                        // Không cần sử dụng try catch bởi vì hàm showMenuFunctionCCCD() đã xử lý lỗi
-                                                        do {
-
-                                                            // Hiển thị menu chức năng
-                                                            showMenuFunctionCCCD();
-
-                                                            // Nhập lựa chọn chức năng
-                                                            System.out.print("Chuc nang: ");
-                                                            choice2 = inputFunction(sc);
-
-                                                            // Kiểm tra lựa chọn chức năng
-                                                            functionCCCD(cccd, choice2);
-                                                        } while (1 > 0);
-                                                    } else {
-
-                                                        // Nếu chuỗi cccd không hợp lệ thì yêu cầu nhập lại
-                                                        System.out.println("So CCCD khong hop le.");
-                                                        System.out.println("Vui long nhap lai hoac 'No' de thoat: ");
-
-                                                        if (cccd.equals("No") && count > 1) {
-                                                            System.out.println("Cam on da su dung dich vu!");
-                                                            System.out.println(
-                                                                    "+----------+--------------------+----------+");
-                                                            System.exit(0);
-                                                        }
-                                                    }
-                                                } while (!checkCCCD(cccd));
-
-                                            } else {
-                                                System.out.println("Ma xac thuc khong dung. Vui long thu lai.");
-                                            }
-                                        } catch (Exception e) {
-                                            System.out.println("Ma xac thuc khong dung. Vui long thu lai.");
-                                            continue;
-                                        }
-                                    } while (!code.equals(random));
-                                } else {
-                                    System.out.println("Lua chon khong hop le! Moi nhap lai!");
-                                }
-
-                            } catch (NumberFormatException e) {
-                                System.out.println("Lua chon khong hop le! Moi nhap lai!");
-                                continue;
-                            }
-                        } while (choiceSecurity != 1 && choiceSecurity != 2);
-
+                        inputSecurity(scanner);
                     } else if (Integer.parseInt(choice) == 0) {
                         System.out.println("Cam on da su dung dich vu!");
                         System.out.println("+----------+--------------------+----------+");
@@ -392,6 +410,14 @@ public class asm01 {
                 continue;
             }
         } while (!choice.matches("[0-2]"));
+    }
 
+
+    public static void main(String[] args) {
+        // Khởi tạo đối tượng scanner
+        Scanner sc = new Scanner(System.in);
+        
+        showMenuCCCD();
+        inputFunctionMain(sc);
     }
 }
