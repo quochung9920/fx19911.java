@@ -74,5 +74,13 @@ public class Bank {
         return false;
     }
 
-
+    /**  Phương thức isAccountExisted dùng để kiểm tra xem khách hàng này đã tồn tại trong ngân hàng hay chưa */
+    public boolean isAccountExisted(String accountId) {
+        for (Customer customer : customers) {
+            if(customer.isAccountExisted(accountId)){
+                throw new RuntimeException("Tai khoan da ton tai!");
+            }
+        }
+        return false;
+    }
 }

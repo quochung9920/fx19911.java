@@ -129,10 +129,8 @@ public class Asm02 {
      * 
      * Sử dụng inputFunction để nhập thông tin
      * Sử dụng addAccountForCustomer để thêm tài khoản cho khách hàng
-     * 
-     * @return Trả về đối tượng tài khoản
      */
-    public static Account checkAccountInformation(Scanner scanner, Customer customer) {
+    public static void checkAccountInformation(Scanner scanner, Customer customer, String cccd) {
         // Nhập số tài khoản từ bàn phím
         String accountNumber = inputFunction(scanner, "Nhap so tai khoan: \n");
         // Nhập số tiền trong tài khoản từ bàn phím
@@ -143,14 +141,19 @@ public class Asm02 {
             Account newAccount = new Account();
             newAccount.setAccountNumber(accountNumber);
             newAccount.setBalance(Double.parseDouble(balance));
-            return newAccount;
+
+            // Kiểm tra tài khoản có tồn tại trong danh sách tài khoản của khách hàng hay không
+            bank.isAccountExisted(accountNumber);
+
+            // Thêm tài khoản cho khách hàng
+            bank.addAccount(cccd, newAccount);
+            System.out.println("Them tai khoan thanh cong!");
         } catch (Exception e) {
             // Thông báo lỗi
             System.out.println(e.getMessage());
             // Thêm thông tin tài khoản khách hàng lại
-            checkAccountInformation(scanner, customer);
+            checkAccountInformation(scanner, customer, cccd);
         }
-        return null;
     }
 
     /** Chức năng 1: Hàm thêm khách hàng vào ngân hàng
@@ -186,15 +189,7 @@ public class Asm02 {
 
         // Kiểm tra khách hàng có tồn tại không
         if (customer != null) {
-
-            // Nhập thông tin và kiểm tra thông tin tài khoản
-            Account newAccount = checkAccountInformation(scanner, customer);
-
-            // Thêm tài khoản cho khách hàng
-            if (newAccount != null) {
-                bank.addAccount(cccd, newAccount);
-                System.out.println("Them tai khoan thanh cong!");
-            }
+            checkAccountInformation(scanner, customer, cccd);
         } else {
             System.out.println("Khong tim thay khach hang! Vui long kiem tra lai.");
             addAccountForCustomer(scanner);
@@ -227,11 +222,9 @@ public class Asm02 {
 
         // Hiển thị thông tin khách hàng
         if (customer != null) {
-            System.out.println("Thong tin khach hang CCCD so: " + cccd);
             customer.displayInformation();
         } else {
-            System.out.println("Khong tim thay khach hang! Vui long kiem tra lai.");
-            searchCustomerByCCCD(scanner);
+            System.out.println("Khong tim thay khach hang!");
         }
     }
 
@@ -251,14 +244,12 @@ public class Asm02 {
         List<Customer> customers = bank.findCustomerByName(name);
 
         // Hiển thị thông tin khách hàng
-        if (customers != null) {
-            System.out.println("Khach hang: ");
+        if (customers.size() > 0) {
             customers.forEach(customer -> {
                 customer.displayInformation();
             });
         } else {
-            System.out.println("Khong tim thay khach hang! Vui long kiem tra lai.");
-            findCustomerByName(scanner);
+            System.out.println("Khong tim thay khach hang!");
         }
     }
 
