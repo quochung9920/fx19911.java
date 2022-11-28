@@ -38,8 +38,6 @@ public class Bank {
         Customer customer = searchCustomerByCCCD(customerId);
         if(customer != null) {
             customer.addAccount(newAccount);
-        } else {
-            throw new RuntimeException("Khach hang khong ton tai!");
         }
     }
 
