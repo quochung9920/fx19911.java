@@ -33,7 +33,32 @@ public class Bank {
         }
     }
 
+    /** Phương thức addAccount dùng để thêm tài khoản mới cho khách hàng */
+    public void addAccount(String customerId, Account newAccount) {
+        Customer customer = searchCustomerByCCCD(customerId);
+        customer.addAccount(newAccount);
+    }
 
+    /** Phương thức searchCustomerByCCCD dùng để tìm kiếm khách hàng theo số CCCD */
+    public Customer searchCustomerByCCCD(String cccd) {
+        for (Customer customer : customers) {
+            if (customer.getCustomerId().equals(cccd)) {
+                return customer;
+            }
+        }
+        return null;
+    }
+
+    /** Phương thức findCustomerByName dùng để tìm kiếm khách hàng theo tên */
+    public List<Customer> findCustomerByName(String name) {
+        List<Customer> result = new ArrayList<>();
+        for (Customer customer : customers) {
+            if (customer.getName().contains(name)) {
+                result.add(customer);
+            }
+        }
+        return result;
+    }
 
     /** Phương thức isCustomerExisted dùng để kiểm tra xem khách hàng này đã tồn tại trong ngân hàng hay chưa */
     public boolean isCustomerExisted(String customerId) {

@@ -1,5 +1,7 @@
+import java.util.List;
 import java.util.Scanner;
 
+import models.Account;
 import models.Bank;
 import models.Customer;
 import models.User;
@@ -9,8 +11,6 @@ public class Asm02 {
     private static final Bank bank = new Bank();
     public static final String AUTHOR = "FX19911";
     public static final String VERSION = "2.0.0";
-    // Init User có sẵn
-    // public static User[] user = User.initUsers();
 
     /* Hàm hiển thị menu chính */
     public static void showMainMenu() {
@@ -35,26 +35,28 @@ public class Asm02 {
         return choice;
     }
 
-    /** Hàm phân tích chức năng */
+    /** Hàm lựa chọn chức năng của menu chính */
     public static void parseFunction(Scanner scanner, String choice) {
         switch (choice) {
             case "1":
                 // Thêm khách hàng
                 addCustomer(scanner);
-                showMainMenu();
-                inputFunctionMain(scanner);
                 break;
             case "2":
                 // Thêm tài khoản cho khách hàng
+                addAccountForCustomer(scanner);
                 break;
             case "3":
                 // Hiển thị danh sách khách hàng
+                showCustomers();
                 break;
             case "4":
                 // Tìm theo CCCD
+                searchCustomerByCCCD(scanner);
                 break;
             case "5":
                 // Tìm theo tên khách hàng
+                findCustomerByName(scanner);
                 break;
             case "0":
                 // Thoát chương trình
@@ -63,23 +65,28 @@ public class Asm02 {
                 System.exit(0);
                 break;
         }
+        // Sau khi thực hiện xong chức năng, hiển thị menu chính
+        showMainMenu();
+        inputFunctionMain(scanner);
     }
 
     /** Hàm triển khai chức năng của menu chính */
     public static void inputFunctionMain(Scanner scanner) {
-        String choice;
-        do {
+        while (true) {
+            String choice;
+            do {
 
-            // Nhập lựa chọn chức năng từ bàn phím
-            choice = inputFunction(scanner, "Chuc nang: ");
+                // Nhập lựa chọn chức năng từ bàn phím
+                choice = inputFunction(scanner, "Chuc nang: ");
 
-            // Kiểm tra lựa chọn chức năng
-            if (choice.matches("[0-5]")) {
-                parseFunction(scanner, choice);
-            } else {
-                System.out.println("Chuc nang khong hop le. Vui long nhap lai.");
-            }
-        } while (!choice.matches("[0-5]"));
+                // Kiểm tra lựa chọn chức năng
+                if (choice.matches("[0-5]")) {
+                    parseFunction(scanner, choice);
+                } else {
+                    System.out.println("Chuc nang khong hop le. Vui long nhap lai.");
+                }
+            } while (!choice.matches("[0-5]"));
+        }
     }
 
     public static void addCustomerAndCheckCCCD(Scanner scanner, String name, String cccd) {
@@ -97,6 +104,8 @@ public class Asm02 {
 
             // Thông báo thêm khách hàng thành công
             System.out.println("Them khach hang thanh cong!");
+
+            showCustomers();
         } catch (Exception e) {
             // Thông báo lỗi
             System.out.println(e.getMessage());
@@ -105,20 +114,212 @@ public class Asm02 {
         }
     }
 
-    /** Hàm thêm khách hàng vào ngân hàng */
+    /** Hàm kiểm tra thông tin tài khoản khách hàng */
+    public static Account checkAccountInformation(Scanner scanner, Customer customer) {
+        // Nhập số tài khoản từ bàn phím
+        String accountNumber = inputFunction(scanner, "Nhap so tai khoan: \n");
+        // Nhập số tiền trong tài khoản từ bàn phím
+        String balance = inputFunction(scanner, "Nhap so du: \n");
+
+        try {
+            // Tạo đối tượng tài khoản
+            Account newAccount = new Account();
+            newAccount.setAccountNumber(accountNumber);
+            newAccount.setBalance(Double.parseDouble(balance));
+            return newAccount;
+        } catch (Exception e) {
+            // Thông báo lỗi
+            System.out.println(e.getMessage());
+            // Thêm thông tin tài khoản khách hàng lại
+            checkAccountInformation(scanner, customer);
+        }
+        return null;
+    }
+
+    /** Chức năng 1: Hàm thêm khách hàng vào ngân hàng */
     public static void addCustomer(Scanner scanner) {
+
+        // Nhập tên khách hàng từ bàn phím
         String name = inputFunction(scanner, "Nhap ten khach hang: \n");
         String cccd = "";
+
+        // Kiểm tra dữ liệu nhập vào và thêm khách hàng vào ngân hàng
         addCustomerAndCheckCCCD(scanner, name, cccd);
     }
 
-    
+    /** Chức năng 2: Hàm thêm tài khoản cho khách hàng */
+    public static void addAccountForCustomer(Scanner scanner) {
+
+        // Nhập số CCCD của khách hàng
+        String cccd = inputFunction(scanner, "Nhap CCCD khach hang: \n");
+
+        // Tìm khách hàng theo số CCCD
+        Customer customer = bank.searchCustomerByCCCD(cccd);
+
+        // Kiểm tra khách hàng có tồn tại không
+        if (customer != null) {
+
+            // Nhập thông tin và kiểm tra thông tin tài khoản
+            Account newAccount = checkAccountInformation(scanner, customer);
+
+            // Thêm tài khoản cho khách hàng
+            if (newAccount != null) {
+                bank.addAccount(cccd, newAccount);
+                System.out.println("Them tai khoan thanh cong!");
+            }
+        } else {
+            System.out.println("Khong tim thay khach hang! Vui long kiem tra lai.");
+            addAccountForCustomer(scanner);
+        }
+    }
+
+    /** Chức năng 3: Hàm hiển thị danh sách khách hàng */
+    public static void showCustomers() {
+        System.out.println("Danh sach khach hang: ");
+        bank.getCustomers().forEach(customer -> {
+            // Hiển thị thông tin 1 khách hàng
+            customer.displayInformation();
+        });
+    }
+
+    /** Chức năng 4: Hàm tìm khách hàng theo CCCD */
+    public static void searchCustomerByCCCD(Scanner scanner) {
+
+        // Nhập số CCCD của khách hàng
+        String cccd = inputFunction(scanner, "Nhap CCCD khach hang: \n");
+
+        // Tìm khách hàng theo số CCCD
+        Customer customer = bank.searchCustomerByCCCD(cccd);
+
+        // Hiển thị thông tin khách hàng
+        if (customer != null) {
+            System.out.println("Thong tin khach hang CCCD so: " + cccd);
+            customer.displayInformation();
+        } else {
+            System.out.println("Khong tim thay khach hang! Vui long kiem tra lai.");
+            searchCustomerByCCCD(scanner);
+        }
+    }
+
+    /** Chức năng 5: Hàm tìm khách hàng theo tên */
+    public static void findCustomerByName(Scanner scanner) {
+        // Nhập tên khách hàng
+        String name = inputFunction(scanner, "Nhap ten khach hang: \n");
+
+        // Tìm khách hàng theo tên
+        List<Customer> customers = bank.findCustomerByName(name);
+
+        // Hiển thị thông tin khách hàng
+        if (customers != null) {
+            System.out.println("Khach hang: ");
+            customers.forEach(customer -> {
+                customer.displayInformation();
+            });
+        } else {
+            System.out.println("Khong tim thay khach hang! Vui long kiem tra lai.");
+            findCustomerByName(scanner);
+        }
+    }
 
     public static void main(String[] args) {
+
+        // Dữ liệu mẫu, muốn sử dụng dữ liệu mẫu thì bỏ comment
+        // bank.addCustomer(new Customer("Hung", "067200005473"));
+        // bank.addCustomer(new Customer("Hoa", "067200005474"));
+        // bank.addCustomer(new Customer("Huong", "067200005475"));
+        // bank.addCustomer(new Customer("Tien", "067200005476"));
+        // bank.addCustomer(new Customer("Hai", "067200005477"));
+        // bank.addCustomer(new Customer("Hien", "067200005478"));
+        // bank.addCustomer(new Customer("Hong", "067200005479"));
+        // Customer customer = bank.searchCustomerByCCCD("067200005473");
+        // Account account1 = new Account();
+        // account1.setAccountNumber("123456");
+        // account1.setBalance(1000000);
+        // customer.addAccount(account1);
+        // Account account2 = new Account();
+        // account2.setAccountNumber("123457");
+        // account2.setBalance(2000000);
+        // customer.addAccount(account2);
+        // Account account3 = new Account();
+        // account3.setAccountNumber("123458");
+        // account3.setBalance(3000000);
+        // customer.addAccount(account3);
+        // Account account4 = new Account();
+        // account4.setAccountNumber("123459");
+        // account4.setBalance(4000000);
+        // customer.addAccount(account4);
+        // Account account5 = new Account();
+        // account5.setAccountNumber("123460");
+        // account5.setBalance(5000000);
+        // Customer customer1 = bank.searchCustomerByCCCD("067200005474");
+        // Account account6 = new Account();
+        // account6.setAccountNumber("123461");
+        // account6.setBalance(6000000);
+        // customer1.addAccount(account6);
+        // Account account7 = new Account();
+        // account7.setAccountNumber("123462");
+        // account7.setBalance(7000000);
+        // customer1.addAccount(account7);
+        // Account account8 = new Account();
+        // account8.setAccountNumber("123463");
+        // account8.setBalance(8000000);
+        // customer1.addAccount(account8);
+        // Customer customer2 = bank.searchCustomerByCCCD("067200005475");
+        // Account account9 = new Account();
+        // account9.setAccountNumber("123464");
+        // account9.setBalance(9000000);
+        // customer2.addAccount(account9);
+        // Account account10 = new Account();
+        // account10.setAccountNumber("123465");
+        // account10.setBalance(10000000);
+        // customer2.addAccount(account10);
+        // Customer customer3 = bank.searchCustomerByCCCD("067200005476");
+        // Account account11 = new Account();
+        // account11.setAccountNumber("123466");
+        // account11.setBalance(11000000);
+        // customer3.addAccount(account11);
+        // Account account12 = new Account();
+        // account12.setAccountNumber("123467");
+        // account12.setBalance(12000000);
+        // customer3.addAccount(account12);
+        // Account account13 = new Account();
+        // account13.setAccountNumber("123468");
+        // account13.setBalance(13000000);
+        // customer3.addAccount(account13);
+        // Account account14 = new Account();
+        // account14.setAccountNumber("123469");
+        // account14.setBalance(14000000);
+        // customer3.addAccount(account14);
+        // Account account15 = new Account();
+        // account15.setAccountNumber("123470");
+        // account15.setBalance(15000000);
+        // customer3.addAccount(account15);
+        // Account account16 = new Account();
+        // account16.setAccountNumber("123471");
+        // account16.setBalance(16000000);
+        // customer3.addAccount(account16);
+        // Customer customer4 = bank.searchCustomerByCCCD("067200005477");
+        // Account account17 = new Account();
+        // account17.setAccountNumber("123472");
+        // account17.setBalance(17000000);
+        // customer4.addAccount(account17);
+        // Account account18 = new Account();
+        // account18.setAccountNumber("123473");
+        // account18.setBalance(18000000);
+        // customer4.addAccount(account18);
+        // Customer customer6 = bank.searchCustomerByCCCD("067200005479");
+        // Account account19 = new Account();
+        // account19.setAccountNumber("123474");
+        // account19.setBalance(19000000);
+        // customer6.addAccount(account19);
+        // Account account20 = new Account();
+        // account20.setAccountNumber("123475");
+        // account20.setBalance(20000000);
+        // customer6.addAccount(account20);
+
         Scanner scanner = new Scanner(System.in);
 
         showMainMenu();
         inputFunctionMain(scanner);
-
     }
 }
