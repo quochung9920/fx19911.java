@@ -36,7 +36,11 @@ public class Bank {
     /** Phương thức addAccount dùng để thêm tài khoản mới cho khách hàng */
     public void addAccount(String customerId, Account newAccount) {
         Customer customer = searchCustomerByCCCD(customerId);
-        customer.addAccount(newAccount);
+        if(customer != null) {
+            customer.addAccount(newAccount);
+        } else {
+            throw new RuntimeException("Khach hang khong ton tai!");
+        }
     }
 
     /** Phương thức searchCustomerByCCCD dùng để tìm kiếm khách hàng theo số CCCD */

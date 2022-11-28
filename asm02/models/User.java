@@ -12,7 +12,6 @@ public class User {
     public String getCustomerId() {
         return customerId;
     }
-
     public void setCustomerId(String customerId) {
         // Chỉ cập nhật khi dữ liệu CCCD mới hợp lệ (độ dài = 12) và là số nguyên từ 0-9
         if (customerId.length() == 12 && customerId.matches("[0-9]+")) {
@@ -21,11 +20,9 @@ public class User {
             throw new IllegalArgumentException("Du lieu CCCD khong hop le!");
         }
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }

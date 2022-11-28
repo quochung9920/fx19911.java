@@ -12,7 +12,7 @@ public class Asm02 {
     public static final String AUTHOR = "FX19911";
     public static final String VERSION = "2.0.0";
 
-    /* Hàm hiển thị menu chính */
+    /** Hàm hiển thị menu chính */
     public static void showMainMenu() {
         System.out.println("+----------+--------------------+----------+");
         System.out.println("| NGAN HANG SO | " + AUTHOR + "@" + VERSION + "             |");
@@ -70,7 +70,9 @@ public class Asm02 {
         inputFunctionMain(scanner);
     }
 
-    /** Hàm triển khai chức năng của menu chính */
+    /** Hàm triển khai chức năng của menu chính
+     * Khi người dùng nhập vào chức năng, hàm này sẽ gọi hàm parseFunction để triển khai chức năng
+     */
     public static void inputFunctionMain(Scanner scanner) {
         while (true) {
             String choice;
@@ -89,6 +91,15 @@ public class Asm02 {
         }
     }
 
+    /** Hàm nhập thông tin khách hàng: CCCD
+     * 
+     * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
+     * @param name Tên của khách hàng
+     * @param cccd CCCD của khách hàng
+     * 
+     * Sử dụng inputFunction để nhập thông tin
+     * Sử dụng addCustomer để thêm khách hàng vào danh sách khách hàng của ngân hàng
+     */
     public static void addCustomerAndCheckCCCD(Scanner scanner, String name, String cccd) {
 
         // Kiểm tra định dạng của CCCD
@@ -104,8 +115,6 @@ public class Asm02 {
 
             // Thông báo thêm khách hàng thành công
             System.out.println("Them khach hang thanh cong!");
-
-            showCustomers();
         } catch (Exception e) {
             // Thông báo lỗi
             System.out.println(e.getMessage());
@@ -114,7 +123,15 @@ public class Asm02 {
         }
     }
 
-    /** Hàm kiểm tra thông tin tài khoản khách hàng */
+    /** Hàm kiểm tra thông tin tài khoản khách hàng
+     * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
+     * @param customer Đối tượng khách hàng
+     * 
+     * Sử dụng inputFunction để nhập thông tin
+     * Sử dụng addAccountForCustomer để thêm tài khoản cho khách hàng
+     * 
+     * @return Trả về đối tượng tài khoản
+     */
     public static Account checkAccountInformation(Scanner scanner, Customer customer) {
         // Nhập số tài khoản từ bàn phím
         String accountNumber = inputFunction(scanner, "Nhap so tai khoan: \n");
@@ -136,7 +153,12 @@ public class Asm02 {
         return null;
     }
 
-    /** Chức năng 1: Hàm thêm khách hàng vào ngân hàng */
+    /** Chức năng 1: Hàm thêm khách hàng vào ngân hàng
+     * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
+     * 
+     * Sử dụng inputFunction để nhập thông tin
+     * Sử dụng addCustomerAndCheckCCCD để thêm khách hàng vào danh sách khách hàng của ngân hàng
+     */
     public static void addCustomer(Scanner scanner) {
 
         // Nhập tên khách hàng từ bàn phím
@@ -147,7 +169,13 @@ public class Asm02 {
         addCustomerAndCheckCCCD(scanner, name, cccd);
     }
 
-    /** Chức năng 2: Hàm thêm tài khoản cho khách hàng */
+    /** Chức năng 2: Hàm thêm tài khoản cho khách hàng
+     * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
+     * 
+     * Sử dụng inputFunction để nhập thông tin
+     * Sử dụng checkAccountInformation để kiểm tra thông tin tài khoản khách hàng
+     * Sử dụng addAccountForCustomer để nhâp lại thông tin tài khoản khách hàng
+     */
     public static void addAccountForCustomer(Scanner scanner) {
 
         // Nhập số CCCD của khách hàng
@@ -182,7 +210,13 @@ public class Asm02 {
         });
     }
 
-    /** Chức năng 4: Hàm tìm khách hàng theo CCCD */
+    /** Chức năng 4: Hàm tìm khách hàng theo CCCD 
+     * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
+     * 
+     * Sử dụng inputFunction để nhập thông tin
+     * Sử dụng searchCustomerByCCCD để tìm khách hàng theo số CCCD
+     * Sử dụng showCustomerInformation để hiển thị thông tin khách hàng
+    */
     public static void searchCustomerByCCCD(Scanner scanner) {
 
         // Nhập số CCCD của khách hàng
@@ -201,7 +235,14 @@ public class Asm02 {
         }
     }
 
-    /** Chức năng 5: Hàm tìm khách hàng theo tên */
+    /** Chức năng 5: Hàm tìm khách hàng theo tên
+     * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
+     * 
+     * Sử dụng inputFunction để nhập thông tin
+     * Sử dụng searchCustomerByName để tìm khách hàng theo tên
+     * 
+     * @return In ra danh sách khách hàng tìm được
+     */
     public static void findCustomerByName(Scanner scanner) {
         // Nhập tên khách hàng
         String name = inputFunction(scanner, "Nhap ten khach hang: \n");
