@@ -211,6 +211,8 @@ public class Asm02 {
      * Sử dụng inputFunction để nhập thông tin
      * Sử dụng searchCustomerByCCCD để tìm khách hàng theo số CCCD
      * Sử dụng showCustomerInformation để hiển thị thông tin khách hàng
+     * 
+     * @return In ra thông tin khách hàng tìm được
     */
     public static void searchCustomerByCCCD(Scanner scanner) {
 
