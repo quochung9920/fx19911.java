@@ -30,7 +30,7 @@ public class Account {
         return balance;
     }
     public void setBalance(double balance) {
-        // Số dư tài khoản phải lớn hơn 50000 và là số thực 
+        // Số dư tài khoản phải lớn hơn 50000
         if (balance >= 50000) {
             this.balance = balance;
         } else {

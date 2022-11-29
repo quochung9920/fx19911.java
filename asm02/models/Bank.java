@@ -54,11 +54,14 @@ public class Bank {
     /** Phương thức findCustomerByName dùng để tìm kiếm khách hàng theo tên */
     public List<Customer> findCustomerByName(String name) {
         List<Customer> result = new ArrayList<>();
+
+        // So sánh tên khách hàng với chuỗi con name, không phân biệt chữ hoa chữ thường
         for (Customer customer : customers) {
-            if (customer.getName().contains(name)) {
+            if (customer.getName().toLowerCase().contains(name.toLowerCase())) {
                 result.add(customer);
             }
         }
+
         return result;
     }
 

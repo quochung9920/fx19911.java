@@ -9,8 +9,8 @@ import models.User;
 public class Asm02 {
 
     private static final Bank bank = new Bank();
-    public static final String AUTHOR = "FX19911";
-    public static final String VERSION = "2.0.0";
+    private static final String AUTHOR = "FX19911";
+    private static final String VERSION = "2.0.0";
 
     /** Hàm hiển thị menu chính */
     public static void showMainMenu() {
@@ -70,8 +70,10 @@ public class Asm02 {
         inputFunctionMain(scanner);
     }
 
-    /** Hàm triển khai chức năng của menu chính
-     * Khi người dùng nhập vào chức năng, hàm này sẽ gọi hàm parseFunction để triển khai chức năng
+    /**
+     * Hàm triển khai chức năng của menu chính
+     * Khi người dùng nhập vào chức năng, hàm này sẽ gọi hàm parseFunction để triển
+     * khai chức năng
      */
     public static void inputFunctionMain(Scanner scanner) {
         while (true) {
@@ -91,21 +93,24 @@ public class Asm02 {
         }
     }
 
-    /** Hàm nhập thông tin khách hàng: CCCD
+    /**
+     * Hàm nhập thông tin khách hàng: CCCD
      * 
      * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
-     * @param name Tên của khách hàng
-     * @param cccd CCCD của khách hàng
+     * @param name    Tên của khách hàng
+     * @param cccd    CCCD của khách hàng
      * 
-     * Sử dụng inputFunction để nhập thông tin
-     * Sử dụng addCustomer để thêm khách hàng vào danh sách khách hàng của ngân hàng
+     *                Sử dụng inputFunction để nhập thông tin
+     *                Sử dụng addCustomer để thêm khách hàng vào danh sách khách
+     *                hàng của ngân hàng
      */
-    public static void addCustomerAndCheckCCCD(Scanner scanner, String name, String cccd) {
+    public static void addCustomerAndCheckCCCD(Scanner scanner, String name) {
+        
 
         // Kiểm tra định dạng của CCCD
         try {
             // Nhập số CCCD từ bàn phím
-            cccd = inputFunction(scanner, "Nhap so CCCD: \n");
+            String cccd = inputFunction(scanner, "Nhap so CCCD: \n");
 
             // Tạo đối tượng khách hàng
             Customer customer = new Customer(name, cccd);
@@ -119,32 +124,66 @@ public class Asm02 {
             // Thông báo lỗi
             System.out.println(e.getMessage());
             // Thêm CCCD khách hàng lại
-            addCustomerAndCheckCCCD(scanner, name, cccd);
+            addCustomerAndCheckCCCD(scanner, name);
         }
     }
 
-    /** Hàm kiểm tra thông tin tài khoản khách hàng
-     * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
-     * @param customer Đối tượng khách hàng
-     * 
-     * Sử dụng inputFunction để nhập thông tin
-     * Sử dụng addAccountForCustomer để thêm tài khoản cho khách hàng
-     */
-    public static void checkAccountInformation(Scanner scanner, Customer customer, String cccd) {
-        // Nhập số tài khoản từ bàn phím
-        String accountNumber = inputFunction(scanner, "Nhap so tai khoan: \n");
-        // Nhập số tiền trong tài khoản từ bàn phím
+    /** Hàm kiểm tra tài khoản khách hàng */
+    public static Account checkNumberAccountInformation(Scanner scanner, Account newAccount){
+        String numberAccount = inputFunction(scanner, "Nhap so tai khoan: \n");
+
+        // Kiểm tra định dạng của số tài khoản
+        try {
+            // Gán số tài khoản cho đối tượng tài khoản
+            newAccount.setAccountNumber(numberAccount);
+
+            bank.isAccountExisted(numberAccount);
+        } catch (Exception e) {
+            // Thông báo lỗi
+            System.out.println(e.getMessage());
+            // Thêm tài khoản khách hàng lại
+            checkNumberAccountInformation(scanner, newAccount);
+        }
+        return newAccount;
+    }
+
+    /** Hàm kiểm tra số tiền khách hàng muốn gửi */
+    public static Account checkBalanceInformation(Scanner scanner, Account newAccount){
         String balance = inputFunction(scanner, "Nhap so du: \n");
 
+        // Kiểm tra định dạng của số tiền
         try {
-            // Tạo đối tượng tài khoản
-            Account newAccount = new Account();
-            newAccount.setAccountNumber(accountNumber);
+            // Gán số tiền cho đối tượng tài khoản
             newAccount.setBalance(Double.parseDouble(balance));
+        } catch (Exception e) {
+            // Thông báo lỗi
+            System.out.println(e.getMessage());
+            // Thêm tài khoản khách hàng lại
+            checkBalanceInformation(scanner, newAccount);
+        }
+        return newAccount;
+    }
 
-            // Kiểm tra tài khoản có tồn tại trong danh sách tài khoản của khách hàng hay không
-            bank.isAccountExisted(accountNumber);
+    /**
+     * Hàm kiểm tra thông tin tài khoản khách hàng
+     * 
+     * @param scanner  Đối tượng Scanner để nhập dữ liệu từ bàn phím
+     * @param customer Đối tượng khách hàng
+     * 
+     *                 Sử dụng inputFunction để nhập thông tin
+     *                 Sử dụng addAccountForCustomer để thêm tài khoản cho khách
+     *                 hàng
+     */
+    public static void checkAccountInformation(Scanner scanner, Customer customer, String cccd) {
+        // Tạo đối tượng tài khoản
+        Account newAccount = new Account();
 
+        // Set số tài khoản cho đối tượng tài khoản
+        newAccount = checkNumberAccountInformation(scanner, newAccount);
+        // Set số tiền cho đối tượng tài khoản
+        newAccount = checkBalanceInformation(scanner, newAccount);
+
+        try {
             // Thêm tài khoản cho khách hàng
             bank.addAccount(cccd, newAccount);
             System.out.println("Them tai khoan thanh cong!");
@@ -156,28 +195,34 @@ public class Asm02 {
         }
     }
 
-    /** Chức năng 1: Hàm thêm khách hàng vào ngân hàng
+    /**
+     * Chức năng 1: Hàm thêm khách hàng vào ngân hàng
+     * 
      * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
      * 
-     * Sử dụng inputFunction để nhập thông tin
-     * Sử dụng addCustomerAndCheckCCCD để thêm khách hàng vào danh sách khách hàng của ngân hàng
+     *                Sử dụng inputFunction để nhập thông tin
+     *                Sử dụng addCustomerAndCheckCCCD để thêm khách hàng vào danh
+     *                sách khách hàng của ngân hàng
      */
     public static void addCustomer(Scanner scanner) {
 
         // Nhập tên khách hàng từ bàn phím
         String name = inputFunction(scanner, "Nhap ten khach hang: \n");
-        String cccd = "";
 
         // Kiểm tra dữ liệu nhập vào và thêm khách hàng vào ngân hàng
-        addCustomerAndCheckCCCD(scanner, name, cccd);
+        addCustomerAndCheckCCCD(scanner, name);
     }
 
-    /** Chức năng 2: Hàm thêm tài khoản cho khách hàng
+    /**
+     * Chức năng 2: Hàm thêm tài khoản cho khách hàng
+     * 
      * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
      * 
-     * Sử dụng inputFunction để nhập thông tin
-     * Sử dụng checkAccountInformation để kiểm tra thông tin tài khoản khách hàng
-     * Sử dụng addAccountForCustomer để nhâp lại thông tin tài khoản khách hàng
+     *                Sử dụng inputFunction để nhập thông tin
+     *                Sử dụng checkAccountInformation để kiểm tra thông tin tài
+     *                khoản khách hàng
+     *                Sử dụng addAccountForCustomer để nhâp lại thông tin tài khoản
+     *                khách hàng
      */
     public static void addAccountForCustomer(Scanner scanner) {
 
@@ -205,15 +250,18 @@ public class Asm02 {
         });
     }
 
-    /** Chức năng 4: Hàm tìm khách hàng theo CCCD 
+    /**
+     * Chức năng 4: Hàm tìm khách hàng theo CCCD
+     * 
      * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
      * 
-     * Sử dụng inputFunction để nhập thông tin
-     * Sử dụng searchCustomerByCCCD để tìm khách hàng theo số CCCD
-     * Sử dụng showCustomerInformation để hiển thị thông tin khách hàng
+     *                Sử dụng inputFunction để nhập thông tin
+     *                Sử dụng searchCustomerByCCCD để tìm khách hàng theo số CCCD
+     *                Sử dụng showCustomerInformation để hiển thị thông tin khách
+     *                hàng
      * 
      * @return In ra thông tin khách hàng tìm được
-    */
+     */
     public static void searchCustomerByCCCD(Scanner scanner) {
 
         // Nhập số CCCD của khách hàng
@@ -230,11 +278,13 @@ public class Asm02 {
         }
     }
 
-    /** Chức năng 5: Hàm tìm khách hàng theo tên
+    /**
+     * Chức năng 5: Hàm tìm khách hàng theo tên
+     * 
      * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
      * 
-     * Sử dụng inputFunction để nhập thông tin
-     * Sử dụng searchCustomerByName để tìm khách hàng theo tên
+     *                Sử dụng inputFunction để nhập thông tin
+     *                Sử dụng searchCustomerByName để tìm khách hàng theo tên
      * 
      * @return In ra danh sách khách hàng tìm được
      */
@@ -258,98 +308,98 @@ public class Asm02 {
     public static void main(String[] args) {
 
         // Dữ liệu mẫu, muốn sử dụng dữ liệu mẫu thì bỏ comment
-        // bank.addCustomer(new Customer("Hung", "067200005473"));
-        // bank.addCustomer(new Customer("Hoa", "067200005474"));
-        // bank.addCustomer(new Customer("Huong", "067200005475"));
-        // bank.addCustomer(new Customer("Tien", "067200005476"));
-        // bank.addCustomer(new Customer("Hai", "067200005477"));
-        // bank.addCustomer(new Customer("Hien", "067200005478"));
-        // bank.addCustomer(new Customer("Hong", "067200005479"));
-        // Customer customer = bank.searchCustomerByCCCD("067200005473");
-        // Account account1 = new Account();
-        // account1.setAccountNumber("123456");
-        // account1.setBalance(1000000);
-        // customer.addAccount(account1);
-        // Account account2 = new Account();
-        // account2.setAccountNumber("123457");
-        // account2.setBalance(2000000);
-        // customer.addAccount(account2);
-        // Account account3 = new Account();
-        // account3.setAccountNumber("123458");
-        // account3.setBalance(3000000);
-        // customer.addAccount(account3);
-        // Account account4 = new Account();
-        // account4.setAccountNumber("123459");
-        // account4.setBalance(4000000);
-        // customer.addAccount(account4);
-        // Account account5 = new Account();
-        // account5.setAccountNumber("123460");
-        // account5.setBalance(5000000);
-        // Customer customer1 = bank.searchCustomerByCCCD("067200005474");
-        // Account account6 = new Account();
-        // account6.setAccountNumber("123461");
-        // account6.setBalance(6000000);
-        // customer1.addAccount(account6);
-        // Account account7 = new Account();
-        // account7.setAccountNumber("123462");
-        // account7.setBalance(7000000);
-        // customer1.addAccount(account7);
-        // Account account8 = new Account();
-        // account8.setAccountNumber("123463");
-        // account8.setBalance(8000000);
-        // customer1.addAccount(account8);
-        // Customer customer2 = bank.searchCustomerByCCCD("067200005475");
-        // Account account9 = new Account();
-        // account9.setAccountNumber("123464");
-        // account9.setBalance(9000000);
-        // customer2.addAccount(account9);
-        // Account account10 = new Account();
-        // account10.setAccountNumber("123465");
-        // account10.setBalance(10000000);
-        // customer2.addAccount(account10);
-        // Customer customer3 = bank.searchCustomerByCCCD("067200005476");
-        // Account account11 = new Account();
-        // account11.setAccountNumber("123466");
-        // account11.setBalance(11000000);
-        // customer3.addAccount(account11);
-        // Account account12 = new Account();
-        // account12.setAccountNumber("123467");
-        // account12.setBalance(12000000);
-        // customer3.addAccount(account12);
-        // Account account13 = new Account();
-        // account13.setAccountNumber("123468");
-        // account13.setBalance(13000000);
-        // customer3.addAccount(account13);
-        // Account account14 = new Account();
-        // account14.setAccountNumber("123469");
-        // account14.setBalance(14000000);
-        // customer3.addAccount(account14);
-        // Account account15 = new Account();
-        // account15.setAccountNumber("123470");
-        // account15.setBalance(15000000);
-        // customer3.addAccount(account15);
-        // Account account16 = new Account();
-        // account16.setAccountNumber("123471");
-        // account16.setBalance(16000000);
-        // customer3.addAccount(account16);
-        // Customer customer4 = bank.searchCustomerByCCCD("067200005477");
-        // Account account17 = new Account();
-        // account17.setAccountNumber("123472");
-        // account17.setBalance(17000000);
-        // customer4.addAccount(account17);
-        // Account account18 = new Account();
-        // account18.setAccountNumber("123473");
-        // account18.setBalance(18000000);
-        // customer4.addAccount(account18);
-        // Customer customer6 = bank.searchCustomerByCCCD("067200005479");
-        // Account account19 = new Account();
-        // account19.setAccountNumber("123474");
-        // account19.setBalance(19000000);
-        // customer6.addAccount(account19);
-        // Account account20 = new Account();
-        // account20.setAccountNumber("123475");
-        // account20.setBalance(20000000);
-        // customer6.addAccount(account20);
+        bank.addCustomer(new Customer("Hung", "067200005473"));
+        bank.addCustomer(new Customer("Hoa", "067200005474"));
+        bank.addCustomer(new Customer("Huong", "067200005475"));
+        bank.addCustomer(new Customer("Tien", "067200005476"));
+        bank.addCustomer(new Customer("Hai", "067200005477"));
+        bank.addCustomer(new Customer("Hien", "067200005478"));
+        bank.addCustomer(new Customer("Hong", "067200005479"));
+        Customer customer = bank.searchCustomerByCCCD("067200005473");
+        Account account1 = new Account();
+        account1.setAccountNumber("123456");
+        account1.setBalance(1000000);
+        customer.addAccount(account1);
+        Account account2 = new Account();
+        account2.setAccountNumber("123457");
+        account2.setBalance(2000000);
+        customer.addAccount(account2);
+        Account account3 = new Account();
+        account3.setAccountNumber("123458");
+        account3.setBalance(3000000);
+        customer.addAccount(account3);
+        Account account4 = new Account();
+        account4.setAccountNumber("123459");
+        account4.setBalance(4000000);
+        customer.addAccount(account4);
+        Account account5 = new Account();
+        account5.setAccountNumber("123460");
+        account5.setBalance(5000000);
+        Customer customer1 = bank.searchCustomerByCCCD("067200005474");
+        Account account6 = new Account();
+        account6.setAccountNumber("123461");
+        account6.setBalance(6000000);
+        customer1.addAccount(account6);
+        Account account7 = new Account();
+        account7.setAccountNumber("123462");
+        account7.setBalance(7000000);
+        customer1.addAccount(account7);
+        Account account8 = new Account();
+        account8.setAccountNumber("123463");
+        account8.setBalance(8000000);
+        customer1.addAccount(account8);
+        Customer customer2 = bank.searchCustomerByCCCD("067200005475");
+        Account account9 = new Account();
+        account9.setAccountNumber("123464");
+        account9.setBalance(9000000);
+        customer2.addAccount(account9);
+        Account account10 = new Account();
+        account10.setAccountNumber("123465");
+        account10.setBalance(10000000);
+        customer2.addAccount(account10);
+        Customer customer3 = bank.searchCustomerByCCCD("067200005476");
+        Account account11 = new Account();
+        account11.setAccountNumber("123466");
+        account11.setBalance(11000000);
+        customer3.addAccount(account11);
+        Account account12 = new Account();
+        account12.setAccountNumber("123467");
+        account12.setBalance(12000000);
+        customer3.addAccount(account12);
+        Account account13 = new Account();
+        account13.setAccountNumber("123468");
+        account13.setBalance(13000000);
+        customer3.addAccount(account13);
+        Account account14 = new Account();
+        account14.setAccountNumber("123469");
+        account14.setBalance(14000000);
+        customer3.addAccount(account14);
+        Account account15 = new Account();
+        account15.setAccountNumber("123470");
+        account15.setBalance(15000000);
+        customer3.addAccount(account15);
+        Account account16 = new Account();
+        account16.setAccountNumber("123471");
+        account16.setBalance(16000000);
+        customer3.addAccount(account16);
+        Customer customer4 = bank.searchCustomerByCCCD("067200005477");
+        Account account17 = new Account();
+        account17.setAccountNumber("123472");
+        account17.setBalance(17000000);
+        customer4.addAccount(account17);
+        Account account18 = new Account();
+        account18.setAccountNumber("123473");
+        account18.setBalance(18000000);
+        customer4.addAccount(account18);
+        Customer customer6 = bank.searchCustomerByCCCD("067200005479");
+        Account account19 = new Account();
+        account19.setAccountNumber("123474");
+        account19.setBalance(19000000);
+        customer6.addAccount(account19);
+        Account account20 = new Account();
+        account20.setAccountNumber("123475");
+        account20.setBalance(20000000);
+        customer6.addAccount(account20);
 
         Scanner scanner = new Scanner(System.in);
 
