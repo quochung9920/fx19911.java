@@ -2,15 +2,24 @@ package models;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Class Account có Access Modifier là public, nên có thể truy cập từ bất cứ đâu */
 public class Account {
     // Khai báo các thuộc tính của Account
     private String accountNumber;
     private double balance;
+    private List<Transaction> transactions = new ArrayList<>();
 
     /** Phương thức khởi tạo */
     public Account() {
+    }
+
+    /** Phương thức khởi tạo */
+    public Account(String accountNumber, double balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
     }
    
 
@@ -37,9 +46,16 @@ public class Account {
             throw new IllegalArgumentException("So du phai lon hon 50,000d!");
         }
     }
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 
     /** Phương thức isPremium() kiểm tra xem tài khoản có phải là tài khoản Premium hay không */
-    public boolean  isPremiumAccount() {
+    public boolean isPremiumAccount() {
         return balance >= 10000000;
     }
 
@@ -49,5 +65,6 @@ public class Account {
         NumberFormat formatter = new DecimalFormat("#,###d");
         return accountNumber + " | " + String.format("%42s", formatter.format(balance));
     }
+
 
 }

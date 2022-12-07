@@ -1,5 +1,7 @@
 package models;
 
+import java.io.Console;
+
 /**
  * Class User có Access Modifier là public, nên có thể truy cập từ bất cứ đâu
  */
@@ -30,6 +32,7 @@ public class User {
             this.customerId = customerId;
         } else {
             throw new IllegalArgumentException("So CCCD khong hop le!");
+
         }
     }
     public String getName() {

@@ -4,7 +4,6 @@ import java.util.Scanner;
 import models.Account;
 import models.Bank;
 import models.Customer;
-import models.User;
 
 public class Asm02 {
 
@@ -98,14 +97,12 @@ public class Asm02 {
      * 
      * @param scanner Đối tượng Scanner để nhập dữ liệu từ bàn phím
      * @param name    Tên của khách hàng
-     * @param cccd    CCCD của khách hàng
      * 
      *                Sử dụng inputFunction để nhập thông tin
      *                Sử dụng addCustomer để thêm khách hàng vào danh sách khách
      *                hàng của ngân hàng
      */
     public static void addCustomerAndCheckCCCD(Scanner scanner, String name) {
-        
 
         // Kiểm tra định dạng của CCCD
         try {
@@ -308,98 +305,98 @@ public class Asm02 {
     public static void main(String[] args) {
 
         // Dữ liệu mẫu, muốn sử dụng dữ liệu mẫu thì bỏ comment
-        bank.addCustomer(new Customer("Hung", "067200005473"));
-        bank.addCustomer(new Customer("Hoa", "067200005474"));
-        bank.addCustomer(new Customer("Huong", "067200005475"));
-        bank.addCustomer(new Customer("Tien", "067200005476"));
-        bank.addCustomer(new Customer("Hai", "067200005477"));
-        bank.addCustomer(new Customer("Hien", "067200005478"));
-        bank.addCustomer(new Customer("Hong", "067200005479"));
-        Customer customer = bank.searchCustomerByCCCD("067200005473");
-        Account account1 = new Account();
-        account1.setAccountNumber("123456");
-        account1.setBalance(1000000);
-        customer.addAccount(account1);
-        Account account2 = new Account();
-        account2.setAccountNumber("123457");
-        account2.setBalance(2000000);
-        customer.addAccount(account2);
-        Account account3 = new Account();
-        account3.setAccountNumber("123458");
-        account3.setBalance(3000000);
-        customer.addAccount(account3);
-        Account account4 = new Account();
-        account4.setAccountNumber("123459");
-        account4.setBalance(4000000);
-        customer.addAccount(account4);
-        Account account5 = new Account();
-        account5.setAccountNumber("123460");
-        account5.setBalance(5000000);
-        Customer customer1 = bank.searchCustomerByCCCD("067200005474");
-        Account account6 = new Account();
-        account6.setAccountNumber("123461");
-        account6.setBalance(6000000);
-        customer1.addAccount(account6);
-        Account account7 = new Account();
-        account7.setAccountNumber("123462");
-        account7.setBalance(7000000);
-        customer1.addAccount(account7);
-        Account account8 = new Account();
-        account8.setAccountNumber("123463");
-        account8.setBalance(8000000);
-        customer1.addAccount(account8);
-        Customer customer2 = bank.searchCustomerByCCCD("067200005475");
-        Account account9 = new Account();
-        account9.setAccountNumber("123464");
-        account9.setBalance(9000000);
-        customer2.addAccount(account9);
-        Account account10 = new Account();
-        account10.setAccountNumber("123465");
-        account10.setBalance(10000000);
-        customer2.addAccount(account10);
-        Customer customer3 = bank.searchCustomerByCCCD("067200005476");
-        Account account11 = new Account();
-        account11.setAccountNumber("123466");
-        account11.setBalance(11000000);
-        customer3.addAccount(account11);
-        Account account12 = new Account();
-        account12.setAccountNumber("123467");
-        account12.setBalance(12000000);
-        customer3.addAccount(account12);
-        Account account13 = new Account();
-        account13.setAccountNumber("123468");
-        account13.setBalance(13000000);
-        customer3.addAccount(account13);
-        Account account14 = new Account();
-        account14.setAccountNumber("123469");
-        account14.setBalance(14000000);
-        customer3.addAccount(account14);
-        Account account15 = new Account();
-        account15.setAccountNumber("123470");
-        account15.setBalance(15000000);
-        customer3.addAccount(account15);
-        Account account16 = new Account();
-        account16.setAccountNumber("123471");
-        account16.setBalance(16000000);
-        customer3.addAccount(account16);
-        Customer customer4 = bank.searchCustomerByCCCD("067200005477");
-        Account account17 = new Account();
-        account17.setAccountNumber("123472");
-        account17.setBalance(17000000);
-        customer4.addAccount(account17);
-        Account account18 = new Account();
-        account18.setAccountNumber("123473");
-        account18.setBalance(18000000);
-        customer4.addAccount(account18);
-        Customer customer6 = bank.searchCustomerByCCCD("067200005479");
-        Account account19 = new Account();
-        account19.setAccountNumber("123474");
-        account19.setBalance(19000000);
-        customer6.addAccount(account19);
-        Account account20 = new Account();
-        account20.setAccountNumber("123475");
-        account20.setBalance(20000000);
-        customer6.addAccount(account20);
+        //  bank.addCustomer(new Customer("Hung", "067200005473"));
+        //  bank.addCustomer(new Customer("Hoa", "067200005474"));
+        //  bank.addCustomer(new Customer("Huong", "067200005475"));
+        //  bank.addCustomer(new Customer("Tien", "067200005476"));
+        //  bank.addCustomer(new Customer("Hai", "067200005477"));
+        //  bank.addCustomer(new Customer("Hien", "067200005478"));
+        //  bank.addCustomer(new Customer("Hong", "067200005479"));
+        //  Customer customer = bank.searchCustomerByCCCD("067200005473");
+        //  Account account1 = new Account();
+        //  account1.setAccountNumber("123456");
+        //  account1.setBalance(1000000);
+        //  customer.addAccount(account1);
+        //  Account account2 = new Account();
+        //  account2.setAccountNumber("123457");
+        //  account2.setBalance(2000000);
+        //  customer.addAccount(account2);
+        //  Account account3 = new Account();
+        //  account3.setAccountNumber("123458");
+        //  account3.setBalance(3000000);
+        //  customer.addAccount(account3);
+        //  Account account4 = new Account();
+        //  account4.setAccountNumber("123459");
+        //  account4.setBalance(4000000);
+        //  customer.addAccount(account4);
+        //  Account account5 = new Account();
+        //  account5.setAccountNumber("123460");
+        //  account5.setBalance(5000000);
+        //  Customer customer1 = bank.searchCustomerByCCCD("067200005474");
+        //  Account account6 = new Account();
+        //  account6.setAccountNumber("123461");
+        //  account6.setBalance(6000000);
+        //  customer1.addAccount(account6);
+        //  Account account7 = new Account();
+        //  account7.setAccountNumber("123462");
+        //  account7.setBalance(7000000);
+        //  customer1.addAccount(account7);
+        //  Account account8 = new Account();
+        //  account8.setAccountNumber("123463");
+        //  account8.setBalance(8000000);
+        //  customer1.addAccount(account8);
+        //  Customer customer2 = bank.searchCustomerByCCCD("067200005475");
+        //  Account account9 = new Account();
+        //  account9.setAccountNumber("123464");
+        //  account9.setBalance(9000000);
+        //  customer2.addAccount(account9);
+        //  Account account10 = new Account();
+        //  account10.setAccountNumber("123465");
+        //  account10.setBalance(10000000);
+        //  customer2.addAccount(account10);
+        //  Customer customer3 = bank.searchCustomerByCCCD("067200005476");
+        //  Account account11 = new Account();
+        //  account11.setAccountNumber("123466");
+        //  account11.setBalance(11000000);
+        //  customer3.addAccount(account11);
+        //  Account account12 = new Account();
+        //  account12.setAccountNumber("123467");
+        //  account12.setBalance(12000000);
+        //  customer3.addAccount(account12);
+        //  Account account13 = new Account();
+        //  account13.setAccountNumber("123468");
+        //  account13.setBalance(13000000);
+        //  customer3.addAccount(account13);
+        //  Account account14 = new Account();
+        //  account14.setAccountNumber("123469");
+        //  account14.setBalance(14000000);
+        //  customer3.addAccount(account14);
+        //  Account account15 = new Account();
+        //  account15.setAccountNumber("123470");
+        //  account15.setBalance(15000000);
+        //  customer3.addAccount(account15);
+        //  Account account16 = new Account();
+        //  account16.setAccountNumber("123471");
+        //  account16.setBalance(16000000);
+        //  customer3.addAccount(account16);
+        //  Customer customer4 = bank.searchCustomerByCCCD("067200005477");
+        //  Account account17 = new Account();
+        //  account17.setAccountNumber("123472");
+        //  account17.setBalance(17000000);
+        //  customer4.addAccount(account17);
+        //  Account account18 = new Account();
+        //  account18.setAccountNumber("123473");
+        //  account18.setBalance(18000000);
+        //  customer4.addAccount(account18);
+        //  Customer customer6 = bank.searchCustomerByCCCD("067200005479");
+        //  Account account19 = new Account();
+        //  account19.setAccountNumber("123474");
+        //  account19.setBalance(19000000);
+        //  customer6.addAccount(account19);
+        //  Account account20 = new Account();
+        //  account20.setAccountNumber("123475");
+        //  account20.setBalance(20000000);
+        //  customer6.addAccount(account20);
 
         Scanner scanner = new Scanner(System.in);
 
