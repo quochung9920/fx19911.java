@@ -317,13 +317,13 @@ public class Asm03 {
         // Dữ liệu mẫu, muốn sử dụng dữ liệu mẫu thì bỏ comment
         activeBank.addCustomer(CUSTOMER_NAME, CUSTOMER_ID);
         activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123451", 1000000));
-        activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123452", 12000000));
-        activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123453", 3000000));
-        activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123454", 5000000));
-        activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123455", 7000000));
-        activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123456", 9000000));
-        activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123457", 11000000));
-        activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123458", 13000000));
+        activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123452", 120000000));
+        // activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123453", 3000000));
+        // activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123454", 5000000));
+        // activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123455", 7000000));
+        // activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123456", 9000000));
+        // activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123457", 11000000));
+        // activeBank.addAccount(CUSTOMER_ID, new LoanAccount("123458", 13000000));
         activeBank.addAccount(CUSTOMER_ID, new SavingsAccount("123459", 15000000));
 
         showMainMenu();

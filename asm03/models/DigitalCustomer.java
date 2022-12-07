@@ -1,6 +1,5 @@
 package models;
 
-import java.io.Console;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -51,6 +50,7 @@ public class DigitalCustomer extends Customer {
             if (!((LoanAccount) account).withdraw(amount)) {
                 throw new IllegalArgumentException("So tien nhap vao khong hop le");
             }
+            
         } else {
             if (!((SavingsAccount) account).withdraw(amount)) {
                 throw new IllegalArgumentException("So tien nhap vao khong hop le");

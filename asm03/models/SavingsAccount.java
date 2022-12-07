@@ -7,6 +7,17 @@ import Utils.Utils;
 import interfaces.ReportService;
 import interfaces.Withdraw;
 
+/**
+ * Class SavingsAccount
+ * Kế thừa từ class Account
+ * Implements interface ReportService, Withdraw
+ * Có thuộc tính: 
+ * - title: tiêu đề biên lai
+ * Có phương thức:
+ * - getTitle(): trả về tiêu đề biên lai
+ * - withdraw(): rút tiền
+ * - printReport(): in biên lai
+ */
 public class SavingsAccount extends Account implements ReportService, Withdraw {
 
     // Thuộc tính
@@ -45,18 +56,29 @@ public class SavingsAccount extends Account implements ReportService, Withdraw {
         System.out.println(Utils.getDivider());
     }
 
+    /** Phương thức rút tiền 
+     * @param amount Số tiền muốn rút
+     */
     @Override
     public boolean withdraw(double amount) {
+        // Nếu số tiền rút hợp lệ thì thực hiện rút tiền và ghi log
         if(isAccepted(amount)){
+            // Số dư còn lại = số dư hiện tại - số tiền rút
             super.setBalance(super.getBalance() - amount);
+            // Ghi log
             log(amount);
+            // Thêm giao dịch vào danh sách giao dịch
             super.getTransactions().add(new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true));
+            
             return true;
         }
 
         return false;
     }
 
+    /** Phương thức kiểm tra số tiền rút có hợp lệ hay không 
+     * @param amount Số tiền muốn rút
+     */
     @Override
     public boolean isAccepted(double amount) {
         // Nếu số tiền muốn rút lớn hơn 5.000.000d và không phải là tài khoản Premium thì không được rút 

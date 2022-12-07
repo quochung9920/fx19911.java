@@ -1,7 +1,8 @@
 package models;
 
-/** Class DigitalBank
- *  Kế thừa từ class Bank
+/** 
+ * Class DigitalBank
+ * Kế thừa từ class Bank
  */
 public class DigitalBank extends Bank{
 
