@@ -87,14 +87,26 @@ public class DigitalBank extends Bank {
      * @param customerId mã khách hàng
      */
     public void displayTransactionHistory(String customerId) {
-        // Kiểm tra xem khách hàng có tồn tại không
         Customer customer = getCustomerById(customerId);
-        if (customer == null) {
-            throw new IllegalArgumentException("Khach hang khong ton tai");
+        showCustomerById(customerId);
+        List<Account> accounts = ((DigitalCustomer)customer).getAccounts();
+        if (accounts.size() > 0) {
+            int count = 0;
+            for (Account account : accounts) {
+                List<Transaction> transactionHistory = account.getTransactions();
+                if (transactionHistory.size() > 0) {
+                    for (Transaction transaction : transactionHistory) {
+                        transaction.displayInformation();
+                        count++;
+                    }
+                }
+            }
+            if (count == 0) {
+                System.out.println("Khach hang chua co giao dich nao");
+            }
         } else {
-            ((DigitalCustomer) customer).displayTransactionHistory();
+            System.out.println("Khach hang chua co tai khoan nao");
         }
-
     }
 
     /**
@@ -167,15 +179,7 @@ public class DigitalBank extends Bank {
         // vào danh sách khách hàng
         customers.stream().forEach(customer -> {
             // Biến kiểm tra khách hàng đã tồn tại hay chưa
-            Boolean isExisted = false;
-
-            // Kiểm tra khách hàng đã tồn tại hay chưa
-            for (Customer customerDat : customersDat) {
-                if (customerDat.getCustomerId().equals(customer.getCustomerId())) {
-                    isExisted = true;
-                    break;
-                }
-            }
+            Boolean isExisted = customersDat.stream().anyMatch(c -> c.getCustomerId().equals(customer.getCustomerId()));
 
             // Nếu khách hàng chưa tồn tại thì thêm vào danh sách khách hàng mới
             if (isExisted) {
@@ -201,13 +205,7 @@ public class DigitalBank extends Bank {
      */
     @Override
     public boolean isCustomerExisted(String customerId) {
-        List<Customer> customers = CustomerDao.list();
-        for (Customer customer : customers) {
-            if (customer.getCustomerId().equals(customerId)) {
-                return true;
-            }
-        }
-        return false;
+        return CustomerDao.list().stream().anyMatch(customer -> customer.getCustomerId().equals(customerId));
     }
 
     /**
@@ -218,12 +216,7 @@ public class DigitalBank extends Bank {
      *         tồn tại
      */
     public boolean isCustomerExisted(List<Customer> customers, Customer newCustomer) {
-        for (Customer customer : customers) {
-            if (customer.getCustomerId().equals(newCustomer.getCustomerId())) {
-                return true;
-            }
-        }
-        return false;
+        return customers.stream().anyMatch(customer -> customer.getCustomerId().equals(newCustomer.getCustomerId()));
     }
 
     /**
@@ -235,13 +228,7 @@ public class DigitalBank extends Bank {
      */
     @Override
     public boolean isAccountExisted(String accountId) {
-        List<Account> accounts = AccountDao.list();
-        for (Account account : accounts) {
-            if (account.getAccountNumber().equals(accountId)) {
-                return true;
-            }
-        }
-        return false;
+        return AccountDao.list().stream().anyMatch(account -> account.getAccountNumber().equals(accountId));
     }
 
     /**
@@ -252,12 +239,7 @@ public class DigitalBank extends Bank {
      *         tài khoản khách hàng không tồn tại
      */
     public boolean isAccountExisted(List<Account> accountsList, Account newAccount) {
-        for (Account account : accountsList) {
-            if (account.getAccountNumber().equals(newAccount.getAccountNumber())) {
-                return true;
-            }
-        }
-        return false;
+        return accountsList.stream().anyMatch(account -> account.getAccountNumber().equals(newAccount.getAccountNumber()));
     }
 
     /**
@@ -269,13 +251,8 @@ public class DigitalBank extends Bank {
      */
     public boolean isAccountExistedInCustomer(String customerId, String accountId) {
 
-        List<Account> accounts = getAccountsByCustomerId(customerId);
-        for (Account account : accounts) {
-            if (account.getAccountNumber().equals(accountId)) {
-                return true;
-            }
-        }
-        return false;
+        List<Account> accounts = this.getAccountsByCustomerId(customerId);
+        return accounts.stream().anyMatch(account -> account.getAccountNumber().equals(accountId));
     }
 
     /**
@@ -285,8 +262,7 @@ public class DigitalBank extends Bank {
      */
     public void addSavingAccount(Scanner scanner, String customerId) {
         Customer customer = getCustomerById(customerId);
-        AccountDao.add((((DigitalCustomer) customer).addSavingAccount(scanner)));
-        System.out.println("Them tai khoan thanh cong");
+        ((DigitalCustomer) customer).addSavingAccount(scanner);
     }
 
     /**
