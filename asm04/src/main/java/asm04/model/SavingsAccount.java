@@ -134,9 +134,15 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
         return false;
     }
 
+    /** Phương thức chuyển tiền 
+     * @param receiveAccount Tài khoản nhận tiền
+     * @param amount Số tiền muốn chuyển
+     */
     @Override
     public void transfer(Account receiveAccount, double amount) {
+        // Nếu số tiền chuyển hợp lệ thì thực hiện chuyển tiền và ghi log
         if (isAcceptedTransfer(amount)) {
+            
             this.setBalance(this.getBalance() - amount);
             receiveAccount.setBalance(receiveAccount.getBalance() + amount);
             AccountDao.update(this);
