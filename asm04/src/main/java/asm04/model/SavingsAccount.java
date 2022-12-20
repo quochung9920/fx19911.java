@@ -89,10 +89,13 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
             log(amount);
             // Thêm giao dịch vào danh sách giao dịch
             Transaction transaction = new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true, TransactionType.WITHDRAW);
-            // super.getTransactions().add(transaction);
             List<Transaction> transactions = TransactionDao.list();
             transactions.add(transaction);
+
+            // Lưu danh sách giao dịch vào file
             TransactionDao.save(transactions);
+
+            // Cập nhật lại số dư vào file
             AccountDao.update(this);
 
             System.out.println("Rut tien thanh cong");
@@ -142,20 +145,29 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
     public void transfer(Account receiveAccount, double amount) {
         // Nếu số tiền chuyển hợp lệ thì thực hiện chuyển tiền và ghi log
         if (isAcceptedTransfer(amount)) {
-            
+            // Câp nhật số dư tài khoản chuyển tiền
             this.setBalance(this.getBalance() - amount);
+            // Câp nhật số dư tài khoản nhận tiền
             receiveAccount.setBalance(receiveAccount.getBalance() + amount);
+            // Update tài khoản chuyển tiền
             AccountDao.update(this);
+
+            // Thêm giao dịch của tài khoản chuyển tiền vào danh sách giao dịch
             Transaction transaction = new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true, TransactionType.TRANSFER);
             List<Transaction> transactions = TransactionDao.list();
             transactions.add(transaction);
 
+            // Update tài khoản nhận tiền
             AccountDao.update(receiveAccount);
+
+            // Thêm giao dịch của tài khoản nhận tiền vào danh sách giao dịch
             Transaction transactionReceive = new Transaction(receiveAccount.getAccountNumber(), amount, Utils.getDateTime(), true, TransactionType.DEPOSIT);
             transactions.add(transactionReceive);
+
+            // Lưu danh sách giao dịch
             TransactionDao.save(transactions);
 
-
+            // Ghi log
             log(amount, TransactionType.TRANSFER, receiveAccount.getAccountNumber());
             System.out.println("Chuyen tien thanh cong");
         } else {
