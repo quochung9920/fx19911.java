@@ -1,8 +1,11 @@
 package asm04.model;
 
+import java.util.List;
+
 import asm02.models.Account;
 import asm04.common.Utils;
 import asm04.dao.AccountDao;
+import asm04.dao.TransactionDao;
 import asm04.model.Transaction.TransactionType;
 import asm04.service.ReportService;
 import asm04.service.Transfer;
@@ -37,6 +40,7 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
     public SavingsAccount(String accountNumber, double balance) {
         super(accountNumber, balance);
     }
+
     @Override
     public String toString() {
         return String.format("%11s",
@@ -84,7 +88,11 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
             // Ghi log
             log(amount);
             // Thêm giao dịch vào danh sách giao dịch
-            super.getTransactions().add(new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true));
+            Transaction transaction = new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true, TransactionType.WITHDRAW);
+            // super.getTransactions().add(transaction);
+            List<Transaction> transactions = TransactionDao.list();
+            transactions.add(transaction);
+            TransactionDao.save(transactions);
             AccountDao.update(this);
 
             System.out.println("Rut tien thanh cong");
@@ -132,7 +140,16 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
             this.setBalance(this.getBalance() - amount);
             receiveAccount.setBalance(receiveAccount.getBalance() + amount);
             AccountDao.update(this);
+            Transaction transaction = new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true, TransactionType.TRANSFER);
+            List<Transaction> transactions = TransactionDao.list();
+            transactions.add(transaction);
+
             AccountDao.update(receiveAccount);
+            Transaction transactionReceive = new Transaction(receiveAccount.getAccountNumber(), amount, Utils.getDateTime(), true, TransactionType.DEPOSIT);
+            transactions.add(transactionReceive);
+            TransactionDao.save(transactions);
+
+
             log(amount, TransactionType.TRANSFER, receiveAccount.getAccountNumber());
             System.out.println("Chuyen tien thanh cong");
         } else {
@@ -140,4 +157,5 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
         }
         
     }
+    
 }

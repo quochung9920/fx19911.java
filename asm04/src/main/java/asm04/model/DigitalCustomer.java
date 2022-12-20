@@ -8,6 +8,8 @@ import asm02.models.Bank;
 import asm02.models.Customer;
 import asm04.common.Utils;
 import asm04.dao.AccountDao;
+import asm04.dao.TransactionDao;
+import asm04.model.Transaction.TransactionType;
 
 /**
  * Class DigitalCustomer
@@ -91,12 +93,23 @@ public class DigitalCustomer extends Customer {
                         Utils.formatAmount(this.getAccounts().stream().mapToDouble(a -> a.getBalance()).sum()));
     }
 
+
     /** Phương thức thêm tài khoản ATM */
-    public Account addSavingAccount(Scanner scanner) {
-        Account acount = new SavingsAccount();
-        acount.input(scanner);
-        acount.setCustomerId(this.getCustomerId());
-        return acount;
+    public void addSavingAccount(Scanner scanner) {
+        Account account = new SavingsAccount();
+        try {
+            account.input(scanner);
+            account.setCustomerId(this.getCustomerId());
+            AccountDao.add(account);
+            List<Transaction> transactions = TransactionDao.list();
+            Transaction transaction = new Transaction(account.getAccountNumber(), account.getBalance(),
+                    Utils.getDateTime(), true, TransactionType.DEPOSIT);
+            transactions.add(transaction);
+            TransactionDao.save(transactions);
+            System.out.println("Them tai khoan thanh cong");
+        } catch (Exception e) {
+            System.out.println("Them tai khoan that bai");
+        }
     }
 
     /** Phương thức chuyển tiền */

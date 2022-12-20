@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import asm04.common.Utils;
+import asm04.dao.AccountDao;
+import asm04.dao.TransactionDao;
 import asm04.model.DigitalBank;
 import asm04.model.Transaction;
+import asm04.model.Transaction.TransactionType;
 
 /**
  * Class Account có Access Modifier là public, nên có thể truy cập từ bất cứ đâu
@@ -49,7 +52,7 @@ public class Account implements Serializable {
     }
 
     public List<Transaction> getTransactions() {
-        return transactions;
+        return TransactionDao.getTransactionsByAccountNumber(this.accountNumber);
     }
 
     public void setTransactions(List<Transaction> transactions) {
@@ -104,5 +107,6 @@ public class Account implements Serializable {
         this.setBalance(Double.parseDouble(balance));
         return this;
     }
+
 
 }

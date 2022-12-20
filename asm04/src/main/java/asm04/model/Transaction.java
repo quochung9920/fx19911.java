@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import asm04.common.Utils;
 
-
-
 /** class quản lý giao dịch */
 public class Transaction implements java.io.Serializable {
 
@@ -18,11 +16,12 @@ public class Transaction implements java.io.Serializable {
     private double amount;
     private String time;
     private Boolean status;
+
     public enum TransactionType {
         DEPOSIT, WITHDRAW, TRANSFER
     }
-    // Tạo biến type
 
+    private TransactionType type;
 
     /** Phương thức khởi tạo */
     public Transaction() {
@@ -35,10 +34,8 @@ public class Transaction implements java.io.Serializable {
         this.amount = amount;
         this.time = time;
         this.status = status;
-        // TransactionType transactionType = TransactionType.WITHDRAW;
+        this.type = type;
     }
-
-
 
     /** Getter và Setter của các thuộc tính */
     public String getAccountNumber() {
@@ -75,6 +72,13 @@ public class Transaction implements java.io.Serializable {
 
     /** Phương thức displayInformation() hiển thị thông tin giao dịch */
     public void displayInformation() {
-        System.out.println("[GD]  " + this.accountNumber + " | " + String.format("%-18s", "-" + Utils.formatAmount(amount)) + "d | " + String.format("%20s", this.time));
+        if (this.type == TransactionType.DEPOSIT)
+            System.out.println("[GD]  " + this.accountNumber + " | " + this.type + " | "
+                    + String.format("%-18s", Utils.formatAmount(amount)) + " | " + String.format("%20s", this.time));
+        else if (this.type == TransactionType.WITHDRAW || this.type == TransactionType.TRANSFER)
+            System.out.println("[GD]  " + this.accountNumber + " | " + this.type + " | "
+                    + String.format("%-18s", "-" + Utils.formatAmount(amount)) + " | "
+                    + String.format("%20s", this.time));
     }
+
 }

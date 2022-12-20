@@ -27,7 +27,6 @@ public class BinaryFileService {
         } catch (EOFException e) {
            return new ArrayList<>();
         } catch (IOException io) {
-
             System.out.println("IO Exception " + io.getMessage());
         } catch (ClassNotFoundException cnf) {
             System.out.println("Class not found Exception " + cnf.getMessage());

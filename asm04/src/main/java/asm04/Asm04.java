@@ -7,6 +7,7 @@ import asm02.models.Account;
 import asm02.models.Customer;
 import asm04.common.Utils;
 import asm04.dao.CustomerDao;
+import asm04.exception.CustomerIdNotValidException;
 import asm04.model.DigitalBank;
 import asm04.model.DigitalCustomer;
 import asm04.model.LoanAccount;
@@ -166,17 +167,17 @@ public class Asm04 {
         String cccd = inputFunction(scanner, "Nhap ma so khach hang: \n");
         try {
             if (cccd.isEmpty()) {
-                throw new Exception("Khong duoc de trong");
+                throw new CustomerIdNotValidException("Khong duoc de trong");
             } else {
                 if (activeBank.isCustomerExisted(cccd)) {
                     Customer customer = new DigitalCustomer();
                     customer.setCustomerId(cccd);
                     return cccd;
                 } else {
-                    throw new Exception("Khong tim thay khach hang");
+                    throw new CustomerIdNotValidException("Khong tim thay khach hang");
                 }
             }
-        } catch (Exception e) {
+        } catch (CustomerIdNotValidException e) {
             System.out.println(e.getMessage());
             return checkCCCD();
         }
@@ -188,14 +189,12 @@ public class Asm04 {
         try {
             String cccd = inputFunction(scanner, "Nhap ma so khach hang: \n");
             if (!activeBank.isCustomerExisted(cccd)) {
-
-                System.out.println("Khong tim thay khach hang " + cccd + ", tac vu khong thanh cong");
-
+                throw new CustomerIdNotValidException("Khong tim thay khach hang " + cccd + ", tac vu khong thanh cong");
             } else {
                 activeBank.addSavingAccount(scanner, cccd);
             }
 
-        } catch (Exception e) {
+        } catch (CustomerIdNotValidException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -225,7 +224,8 @@ public class Asm04 {
 
     /** Chức năng 6: In ra lịch sử giao dịch */
     private static void showHistory() {
-
+        String cccd = checkCCCD();
+        activeBank.displayTransactionHistory(cccd);
     }
 
     public static void main(String[] args) {

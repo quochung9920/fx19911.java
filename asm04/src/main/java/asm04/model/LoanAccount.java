@@ -68,14 +68,14 @@ public class LoanAccount extends Account implements ReportService, Withdraw {
     @Override
     public boolean withdraw(double amount) {
         if(isAcceptedWithdraw(amount)){
-            // Cập nhật phí rút tiền
-            feeWithdraw = this.getFee() * amount;
-            // Cập nhật số dư tài khoản
-            super.setBalance(super.getBalance() - amount - feeWithdraw);
-            // Ghi log giao dịch
-            log(amount);
-            // Thêm giao dịch vào danh sách giao dịch
-            super.getTransactions().add(new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true));
+            // // Cập nhật phí rút tiền
+            // feeWithdraw = this.getFee() * amount;
+            // // Cập nhật số dư tài khoản
+            // super.setBalance(super.getBalance() - amount - feeWithdraw);
+            // // Ghi log giao dịch
+            // log(amount);
+            // // Thêm giao dịch vào danh sách giao dịch
+            // super.getTransactions().add(new Transaction(this.getAccountNumber(), amount, Utils.getDateTime(), true));
             
             return true;
         }
