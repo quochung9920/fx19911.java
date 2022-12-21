@@ -70,7 +70,7 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
         System.out.printf("ATM ID: %30s%n", "DIGITAL-BANK-ATM 2022");
         System.out.printf("SO TK: %31s%n", this.getAccountNumber());
         System.out.printf("SO TK: %31s%n", receiveAccount);
-        System.out.printf("SO TIEN CHUYEN: %23s%n", Utils.formatBalance(amount));
+        System.out.printf("SO TIEN CHUYEN: %22s%n", Utils.formatBalance(amount));
         System.out.printf("SO DU: %31s%n", Utils.formatBalance(this.getBalance()));
         System.out.printf("PHI + VAT: %27s%n", Utils.formatBalance(0.0));
         System.out.println(Utils.getDivider());
@@ -80,7 +80,7 @@ public class SavingsAccount extends Account implements ReportService, Withdraw, 
      * @param amount Số tiền muốn rút
      */
     @Override
-    public boolean withdraw(double amount) {
+    public synchronized boolean withdraw(double amount) {
         // Nếu số tiền rút hợp lệ thì thực hiện rút tiền và ghi log
         if(isAcceptedWithdraw(amount)){
             // Số dư còn lại = số dư hiện tại - số tiền rút

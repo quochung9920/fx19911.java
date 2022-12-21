@@ -17,7 +17,6 @@ public class TransactionDao {
     /** Phương thức này dùng để lưu danh sách giao dịch vào file */
     public static void save(List<Transaction> customers) {
         BinaryFileService.writeFile(FILE_NAME, customers);
-        System.out.println("Ghi file thành công!");
     }
 
     /** Phương thức này dùng để đọc danh sách giao dịch từ file */

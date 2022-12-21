@@ -315,7 +315,7 @@ public class DigitalBank extends Bank {
      */
     public void tranfers(Scanner scanner, String customerId) {
         Customer customer = getCustomerById(customerId);
-        ((DigitalCustomer) customer).tranfers(scanner);
+        ((DigitalCustomer) customer).transfer(scanner);
     }
 
 }

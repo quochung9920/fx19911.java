@@ -1,16 +1,12 @@
 package asm04;
 
-import java.util.List;
 import java.util.Scanner;
 
 import asm02.models.Account;
 import asm02.models.Customer;
-import asm04.common.Utils;
-import asm04.dao.CustomerDao;
 import asm04.exception.CustomerIdNotValidException;
 import asm04.model.DigitalBank;
 import asm04.model.DigitalCustomer;
-import asm04.model.LoanAccount;
 import asm04.model.SavingsAccount;
 
 public class Asm04 {
@@ -65,6 +61,7 @@ public class Asm04 {
 
     /** Hàm lựa chọn chức năng của menu chính */
     public static void parseFunction(Scanner scanner, String choice) {
+
         switch (choice) {
             case "1":
                 // Danh sách khách hàng
@@ -189,7 +186,8 @@ public class Asm04 {
         try {
             String cccd = inputFunction(scanner, "Nhap ma so khach hang: \n");
             if (!activeBank.isCustomerExisted(cccd)) {
-                throw new CustomerIdNotValidException("Khong tim thay khach hang " + cccd + ", tac vu khong thanh cong");
+                throw new CustomerIdNotValidException(
+                        "Khong tim thay khach hang " + cccd + ", tac vu khong thanh cong");
             } else {
                 activeBank.addSavingAccount(scanner, cccd);
             }
@@ -229,9 +227,16 @@ public class Asm04 {
     }
 
     public static void main(String[] args) {
-        // showIntro();
         showMainMenu();
         inputFunctionMain(scanner);
 
+        // Account a = activeBank.getAccountByAccountNumber("001215000002", "123457");
+        // System.out.println(a.getBalance());
+        // Runnable task1 = new WithdrawTask(a, 50000);
+        // Thread t1 = new Thread(task1);
+        // Runnable task2 = new WithdrawTask(a, 100000);
+        // Thread t2 = new Thread(task2);
+        // t1.start();
+        // t2.start();
     }
 }

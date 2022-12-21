@@ -73,7 +73,7 @@ public class Transaction implements java.io.Serializable {
     /** Phương thức displayInformation() hiển thị thông tin giao dịch */
     public void displayInformation() {
         if (this.type == TransactionType.DEPOSIT)
-            System.out.println("[GD]  " + this.accountNumber + " | " + this.type + " | "
+            System.out.println("[GD]  " + this.accountNumber + " | " + this.type + "  | "
                     + String.format("%-18s", Utils.formatAmount(amount)) + " | " + String.format("%20s", this.time));
         else if (this.type == TransactionType.WITHDRAW || this.type == TransactionType.TRANSFER)
             System.out.println("[GD]  " + this.accountNumber + " | " + this.type + " | "

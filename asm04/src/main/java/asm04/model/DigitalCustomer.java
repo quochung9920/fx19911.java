@@ -6,7 +6,9 @@ import java.util.Scanner;
 import asm02.models.Account;
 import asm02.models.Bank;
 import asm02.models.Customer;
+import asm04.common.TransferTask;
 import asm04.common.Utils;
+import asm04.common.WithdrawTask;
 import asm04.dao.AccountDao;
 import asm04.dao.TransactionDao;
 import asm04.model.Transaction.TransactionType;
@@ -50,7 +52,7 @@ public class DigitalCustomer extends Customer {
     /** Phương thức rút tiền */
     public void withdraw(Scanner scanner) {
         List<Account> accounts = this.getAccounts();
-        if(!accounts.isEmpty()){
+        if (!accounts.isEmpty()) {
             Account account;
             double amount;
 
@@ -65,10 +67,19 @@ public class DigitalCustomer extends Customer {
             } while (amount <= 0);
 
             if (account instanceof SavingsAccount) {
-                ((SavingsAccount)account).withdraw(amount);
+                Runnable task = new WithdrawTask(account, amount);
+                Thread t = new Thread(task);
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
             } else if (account instanceof LoanAccount) {
-                ((LoanAccount)account).withdraw(amount);
-            } 
+                ((LoanAccount) account).withdraw(amount);
+            }
         } else {
             System.out.println("Khach hang khong co tai khoan nao, thao tac khong thanh cong");
         }
@@ -76,7 +87,7 @@ public class DigitalCustomer extends Customer {
 
     /** Phương thức in ra lịch sử giao dịch của tài khoản */
     public void displayTransactionHistory() {
-        
+
     }
 
     /** Phương thức lấy danh sách tài khoản */
@@ -92,7 +103,6 @@ public class DigitalCustomer extends Customer {
                 + String.format("%22s",
                         Utils.formatAmount(this.getAccounts().stream().mapToDouble(a -> a.getBalance()).sum()));
     }
-
 
     /** Phương thức thêm tài khoản ATM */
     public void addSavingAccount(Scanner scanner) {
@@ -113,12 +123,12 @@ public class DigitalCustomer extends Customer {
     }
 
     /** Phương thức chuyển tiền */
-    public void tranfers(Scanner scanner) {
+    public void transfer(Scanner scanner) {
         // Lấy danh sách tài khoản thuộc khách hàng này
         List<Account> accounts = this.getAccounts();
 
         // Nếu khách hàng có tài khoản
-        if(!accounts.isEmpty()){
+        if (!accounts.isEmpty()) {
             Account account;
             String amount;
             String accountNumber;
@@ -147,7 +157,7 @@ public class DigitalCustomer extends Customer {
                         isExist = true;
                         accountReceive = account2;
                         break;
-                    } 
+                    }
                 }
                 if (!isExist) {
                     System.out.println("So tai khoan khong ton tai");
@@ -156,28 +166,37 @@ public class DigitalCustomer extends Customer {
             } while (accountNumber.isEmpty() || !isExist || accountNumber.equals(account.getAccountNumber()));
 
             Bank bank = new DigitalBank();
-            System.out.println("Gui tien den so tai khoan: " + accountNumber + " | " + ((DigitalBank)bank).getCustomerByAccountId(accountNumber).getName());
+            System.out.println("Gui tien den so tai khoan: " + accountNumber + " | "
+                    + ((DigitalBank) bank).getCustomerByAccountId(accountNumber).getName());
 
             do {
                 System.out.print("Nhap so tien chuyen: ");
                 amount = scanner.nextLine();
-                if(amount.isEmpty() || !amount.matches("[0-9]+") || Double.parseDouble(amount) <= 0){
+                if (amount.isEmpty() || !amount.matches("[0-9]+") || Double.parseDouble(amount) <= 0) {
                     System.out.println("So tien chuyen khong hop le");
                 }
 
             } while (!amount.matches("[0-9]+") || amount.isEmpty() || Double.parseDouble(amount) <= 0);
 
-            do{
-                System.out.print("Xac nhan thuc hien chuyen " + amount + " tu tai khoan " + account.getAccountNumber() + " den tai khoan " + accountNumber + " (y/n): ");
-            confirm = scanner.nextLine();
+            do {
+                System.out.print("Xac nhan thuc hien chuyen " + amount + " tu tai khoan " + account.getAccountNumber()
+                        + " den tai khoan " + accountNumber + " (y/n): ");
+                confirm = scanner.nextLine();
             } while (!confirm.toLowerCase().equals("y") && !confirm.toLowerCase().equals("n"));
 
             if (confirm.toLowerCase().equals("y")) {
                 if (account instanceof SavingsAccount) {
-                    ((SavingsAccount)account).transfer(accountReceive, Double.parseDouble(amount));
+                    Runnable task = new TransferTask(account, accountReceive, Double.parseDouble(amount));
+                    Thread t = new Thread(task);
+                    t.start();
+                    try {
+                        t.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else if (account instanceof LoanAccount) {
                     // ((LoanAccount)account).tranfers(amount, accountNumber);
-                } 
+                }
             } else {
                 return;
             }
