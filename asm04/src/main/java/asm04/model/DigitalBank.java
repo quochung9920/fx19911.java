@@ -3,13 +3,11 @@ package asm04.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import asm02.models.Account;
 import asm02.models.Bank;
 import asm02.models.Customer;
-import asm04.common.Utils;
 import asm04.dao.AccountDao;
 import asm04.dao.CustomerDao;
 import asm04.service.TextFileService;
@@ -72,6 +70,7 @@ public class DigitalBank extends Bank {
     public boolean isAccountExistedNotThrow(String accountNumber) {
         for (Customer customer : super.getCustomers()) {
             for (Account account : customer.getAccounts()) {
+                // Kiểm tra xem tài khoản có tồn tại hay không
                 if (account.getAccountNumber().equals(accountNumber)) {
                     return true;
                 }
@@ -228,6 +227,17 @@ public class DigitalBank extends Bank {
      */
     @Override
     public boolean isAccountExisted(String accountId) {
+        return AccountDao.list().stream().anyMatch(account -> account.getAccountNumber().equals(accountId));
+    }
+
+    /**
+     * Phương thức kiểm tra xem tài khoản khách hàng có tồn tại hay không
+     * 
+     * @param accountId mã tài khoản khách hàng
+     * @return trả về khách hàng nếu tài khoản khách hàng tồn tại, trả về null nếu
+     *         tài khoản khách hàng không tồn tại
+     */
+    public boolean isAccountExits(String accountId) {
         return AccountDao.list().stream().anyMatch(account -> account.getAccountNumber().equals(accountId));
     }
 

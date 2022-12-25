@@ -37,7 +37,6 @@ public class AccountDao {
     public static void update(Account account) {
         List<Account> accounts = list();
         boolean hasExist = accounts.stream().anyMatch(acc -> acc.getAccountNumber().equals(account.getAccountNumber()));
-
         List<Account> updateAccounts;
         if(!hasExist){
             updateAccounts = new ArrayList<>();
